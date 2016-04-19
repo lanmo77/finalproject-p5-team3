@@ -2,6 +2,7 @@ setwd("C:/Users/mangmangyuzhou/Desktop/2016 Spring/data science/project 5")
 load("game2011.Rdata")
 load("teamdata.Rdata")
 load("teamdata2.Rdata")
+library(dplyr)
 
 teamdata$test <- lapply(strsplit(as.character(teamdata$HOMEDESCRIPTION), "\\("), "[", 2)
 teamdata$HOMEDESCRIPTION <- lapply(strsplit(as.character(teamdata$HOMEDESCRIPTION), "\\("), "[", 1)
