@@ -33,9 +33,15 @@ df_fouls = filter(teamdata, EVENTMSGTYPE == 6) %>% group_by(GAME_ID) %>% summari
 # which.max(df_fouls$count)
 df_fouls_game = filter(teamdata, GAME_ID=="0021400020" & (EVENTMSGTYPE=="6" | EVENTMSGTYPE=="3"))
 
-# Filter Personal Take Foul counts --> Game 0021400802 has the most PERSONAL TAKE FOULS (Spurs vs Clippers)
+# Filter 'Personal Take Foul' counts --> Game 0021400802 has the most PERSONAL TAKE FOULS (Spurs vs Clippers)
 df_ptf <- filter(teamdata, EVENTMSGACTIONTYPE == 28) %>% group_by(GAME_ID) %>% summarise(count = n())
-# Filter out this game
+
+```
+
+# SCORE MARGIN AND NUMBER OF FOULS THROUGHOUT GAME
+
+```{r setup, include=FALSE}
+# Filter out any game (change ID)
 game = filter(teamdata, GAME_ID=="0021400802")
 
 # Data manipulation:
@@ -50,19 +56,25 @@ for(i in 1:nrow(game)) {
 game$SCOREMARGIN <- as.numeric(game$SCOREMARGIN)
 
 ## Fix SCORE
-game$SCORE[1] = '0 - 2'
-for(i in 1:nrow(game)) {
-  if(game$SCORE[i] == 'NULL')
-    game$SCORE[i] <- game$SCORE[i - 1]
-}
+#game$SCORE[1] = '0 - 2'
+#for(i in 1:nrow(game)) {
+#  if(game$SCORE[i] == 'NULL')
+#    game$SCORE[i] <- game$SCORE[i - 1]
+#}
 
-## Add timestamps min:sec remaining AND sec into game
+## Add timestamps min:sec left AND sec into game
 game$MINSECLEFT <- ms(game$PCTIMESTRING) + minutes((4 - game$PERIOD) * 12)
 game$SECINTOGAME <- 2880 - period_to_seconds(game$MINSEC)
 
-# Plot SCOREMARGIN vs TIME
-ggplot(game, aes(game$SECINTOGAME, game$SCOREMARGIN)) + geom_line() + xlim(0, 2880) + xlab('Period') + scale_x_continuous(breaks = c(0, 720, 1440, 2160, 2880), labels = c('P1', 'P2', 'P3', 'P4', 'Final')) + ylab('Score Margin') + ggtitle('Spurs vs Clippers')
+## Compute number of fouls in every four minute interval
+game$GROUP <- ceiling(game$SECINTOGAME / 240)
+# "HOMEDESCRIPTION == NULL" makes sure we are only getting visitor team's fouls. CHANGE AS NECESSARY.
+temp <- filter(game, EVENTMSGTYPE == 6 & HOMEDESCRIPTION == 'NULL') %>% group_by(GROUP) %>% summarise(count = n())
+game$NUMFOULS <- temp[match(game$GROUP, temp$GROUP), "count"]
+game$NUMFOULS[is.na(game$NUMFOULS)] <- 0
+game$GROUP <- NULL
 
-
+# Plot SCOREMARGIN vs TIME and NUMFOULS vs TIME
+ggplot(game, aes(game$SECINTOGAME, game$SCOREMARGIN)) + geom_line(aes(colour = game$NUMFOULS)) + scale_x_continuous(breaks = c(0, 720, 1440, 2160, 2880), labels = c('P1', 'P2', 'P3', 'P4', 'Final')) + labs(title = 'Spurs vs Clippers', x = 'Period', y = 'Score Margin') + theme(legend.title=element_blank())
 
 ```
