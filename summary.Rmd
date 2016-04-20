@@ -157,9 +157,38 @@ gg <- ggplotly(p)
 gg
 ```
 
+
+# Scatter plot of FTA and FT%
 ```{r}
+setwd("~/Desktop/project5")
+load('playerstatsData.Rdata')
+note=playerstatsData[c(107,130),]  #Deandre Jordan and DH
+
+
+a=list()
+for (i in 1:2){
+  m=note[i,]
+  a[[i]]=list(
+    x=m$FT_PCT,
+    y=m$FTA,
+    text=m$PLAYER_NAME,
+    xref = "x",
+    yref = "y",
+    showarrow = TRUE,
+    arrowhead = 7,
+    ax = 20,
+    ay = -40
+  )
+}
+
+plot_ly(x = playerstatsData$FT_PCT, y =playerstatsData$FTA , text=paste('Name:',playerstatsData$PLAYER_NAME),
+        mode = "markers", color = playerstatsData$FT_PCT)%>%layout(annotations = a)
+
+
 
 ```
+
+
 
 ```{r}
 
