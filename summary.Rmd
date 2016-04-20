@@ -1,0 +1,166 @@
+---
+title: "Project5_Summary Stats"
+author: "Yuhan Sun"
+date: "April 20, 2016"
+output: html_document
+---
+
+#Load the data
+```{r}
+library(ggplot2)
+library(plotly)
+setwd("~/Desktop/project5")
+load('playerstatsData.Rdata')
+
+#Tow special case
+dj=playerstatsData[107,]  #Deandre Jordan
+dh=playerstatsData[130,] # Dwight Howard
+```
+
+# FGM - Field Goals Made
+```{r}
+playerstatsData$FGM=as.numeric(playerstatsData$FGM)
+data.fgm=playerstatsData[order(playerstatsData$FGM),c('PLAYER_NAME','TEAM_ABBREVIATION','FGM')]
+ind=seq(1:dim(data.fgm)[1])
+data.fgm['ind']=ind
+p=ggplot(data=data.fgm,aes(x=ind,y=FGM))+geom_point(aes(text=paste('Name:',PLAYER_NAME)))+ggtitle('Overall Distribution of FGM')+ylab('FGM')+
+  geom_point(x=data.fgm[335,'ind'],y=data.fgm[335,'FGM'],color='red')+
+  geom_point(x=data.fgm[212,'ind'],y=data.fgm[212,'FGM'],color='blue')
+
+gg <- ggplotly(p)
+gg
+```
+
+# FTM - Free Throws Made
+```{r}
+playerstatsData$FTM=as.numeric(playerstatsData$FTM)
+data.ftm=playerstatsData[order(playerstatsData$FTM),c('PLAYER_NAME','TEAM_ABBREVIATION','FTM')]
+ind=seq(1:dim(data.ftm)[1])
+data.ftm['ind']=ind
+p=ggplot(data=data.ftm,aes(x=ind,y=FTM))+geom_point(aes(text=paste('Name:',PLAYER_NAME)))+ggtitle('Overall Distribution of FTM')+ylab('FTM')+
+  geom_point(x=data.ftm[173,'ind'],y=data.ftm[173,'FTM'],color='red')+
+  geom_point(x=data.ftm[119,'ind'],y=data.ftm[119,'FTM'],color='blue')
+
+gg <- ggplotly(p)
+gg
+```
+
+
+# FTA - Free Thorws Attempted
+```{r}
+playerstatsData$FTA=as.numeric(playerstatsData$FTA)
+data.fta=playerstatsData[order(playerstatsData$FTA),c('PLAYER_NAME','TEAM_ABBREVIATION','FTA')]
+ind=seq(1:dim(data.fta)[1])
+data.fta['ind']=ind
+p=ggplot(data=data.fta,aes(x=ind,y=FTA))+geom_point(aes(text=paste('Name:',PLAYER_NAME)))+ggtitle('Overall Distribution of FTA')+ylab('FTA')+
+  geom_point(x=data.fta[372,'ind'],y=data.fta[372,'FTA'],color='red')+
+  geom_point(x=data.fta[255,'ind'],y=data.fta[255,'FTA'],color='blue')
+
+gg <- ggplotly(p)
+gg
+```
+
+# FT% - Free Throw Percentage
+```{r}
+playerstatsData$FT_PCT=as.numeric(playerstatsData$FT_PCT)
+data.ftpct=playerstatsData[order(playerstatsData$FT_PCT),c('PLAYER_NAME','TEAM_ABBREVIATION','FT_PCT')]
+ind=seq(1:dim(data.ftpct)[1])
+data.ftpct['ind']=ind
+data.ftpct[31,]
+data.ftpct[63,]
+
+p=ggplot(data=data.ftpct,aes(x=ind,y=FT_PCT))+geom_point(aes(text=paste('Name:',PLAYER_NAME)))+ggtitle('Overall Distribution of FT_PCT')+ylab('FT_PCT')+
+  geom_point(x=data.ftpct[31,'ind'],y=data.ftpct[31,'FT_PCT'],color='red')+
+  #geom_text(x=data.ftpct[31,'ind']+30,y=data.ftpct[31,'FT_PCT']-10,label=data.ftpct$PLAYER_NAME[31],color='red',size=0.2)+
+  geom_point(x=data.ftpct[63,'ind'],y=data.ftpct[63,'FT_PCT'],color='blue')#+
+  #geom_text(x=data.ftpct[63,'ind']+30,y=data.ftpct[63,'PT_PCT']-10,label=data.ftpct$PLAYER_NAME[63],color='blue')
+
+gg <- ggplotly(p)
+gg
+
+
+```
+
+
+# OREB - Offensive Rebounds
+```{r}
+playerstatsData$OREB=as.numeric(playerstatsData$OREB)
+data.oreb=playerstatsData[order(playerstatsData$OREB),c('PLAYER_NAME','TEAM_ABBREVIATION','OREB')]
+ind=seq(1:dim(data.oreb)[1])
+data.oreb['ind']=ind
+
+data.oreb[317,]
+data.oreb[57,]
+
+
+p=ggplot(data=data.oreb,aes(x=ind,y=OREB))+geom_point(aes(text=paste('Name:',PLAYER_NAME)))+ggtitle('Overall Distribution of OREB')+ylab('Offensive Rebounds')+
+  geom_point(x=data.oreb[317,'ind'],y=data.oreb[317,'OREB'],color='red')+
+  geom_text(x=data.oreb[317,'ind']+30,y=data.oreb[317,'OREB']-10,label=data.oreb$PLAYER_NAME[317],color='red',size=0.2)+
+  geom_point(x=data.oreb[57,'ind'],y=data.oreb[57,'OREB'],color='blue')+
+  geom_text(x=data.oreb[57,'ind']+30,y=data.oreb[57,'OREB']-10,label=data.oreb$PLAYER_NAME[57],color='blue')
+
+gg <- ggplotly(p)
+gg
+
+
+```
+
+
+# DREB -Defensive Rebounds
+```{r}
+playerstatsData$DREB=as.numeric(playerstatsData$DREB)
+data.dreb=playerstatsData[order(playerstatsData$DREB),c('PLAYER_NAME','TEAM_ABBREVIATION','DREB')]
+ind=seq(1:dim(data.dreb)[1])
+data.dreb['ind']=ind
+
+
+p=ggplot(data=data.dreb,aes(x=ind,y=DREB))+geom_point(aes(text=paste('Name:',PLAYER_NAME)))+ggtitle('Overall Distribution of DREB')+ylab('defensive Rebounds')+
+  geom_point(x=data.dreb[467,'ind'],y=data.dreb[467,'DREB'],color='red')+
+  geom_text(x=data.dreb[467,'ind']-10,y=data.dreb[467,'DREB']-40,label=data.dreb$PLAYER_NAME[467],color='red',size=0.2)+
+  geom_point(x=data.dreb[312,'ind'],y=data.dreb[312,'DREB'],color='blue')+
+  geom_text(x=data.dreb[312,'ind']-10,y=data.dreb[312,'DREB']-40,label=data.dreb$PLAYER_NAME[312],color='blue')
+
+gg <- ggplotly(p)
+gg
+
+
+```
+
+#REB - Rebounds
+```{r}
+playerstatsData$REB=as.numeric(playerstatsData$REB)
+data.reb=playerstatsData[order(playerstatsData$REB),c('PLAYER_NAME','TEAM_ABBREVIATION','REB')]
+ind=seq(1:dim(data.reb)[1])
+data.reb['ind']=ind
+
+
+p=ggplot(data=data.reb,aes(x=ind,y=REB))+geom_point(aes(text=paste('Name:',PLAYER_NAME)))+ggtitle('Overall Distribution of REB')+ylab('Rebounds')+
+  geom_point(x=data.reb[43,'ind'],y=data.reb[43,'REB'],color='red')+
+  geom_point(x=data.reb[353,'ind'],y=data.reb[353,'REB'],color='blue')
+gg <- ggplotly(p)
+gg
+
+```
+
+# PF  - Personal Fouls
+```{r}
+playerstatsData$PF=as.numeric(playerstatsData$PF)
+data.pf=playerstatsData[order(playerstatsData$PF),c('PLAYER_NAME','TEAM_ABBREVIATION','PF')]
+ind=seq(1:dim(data.pf)[1])
+data.pf['ind']=ind
+
+
+p=ggplot(data=data.pf,aes(x=ind,y=PF))+geom_point(aes(text=paste('Name:',PLAYER_NAME)))+ggtitle('Overall Distribution of PF')+ylab('Personal Fouls')+
+  geom_point(x=data.pf[312,'ind'],y=data.pf[312,'PF'],color='red')+
+  geom_point(x=data.pf[119,'ind'],y=data.pf[119,'PF'],color='blue')
+gg <- ggplotly(p)
+gg
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
