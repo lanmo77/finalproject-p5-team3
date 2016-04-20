@@ -106,44 +106,9 @@ for(i in 1:nrow(teamdata)){
 ```
 
 
-#Team Statistics
-```{r}
-df_per_game = filter(teamdata, EVENTMSGTYPE=="3")%>%group_by(GAME_ID,PERIOD)%>% summarise(count = n())
-df_game = filter(teamdata, EVENTMSGTYPE=="3")%>%group_by(GAME_ID)%>% summarise(count = n())
-
-mean(df_game$count)
-median(df_game$count)
-range(df_game$count)
-
-df_per_game = df_per_game[complete.cases(df_per_game),]
-ggplot(df_per_game, aes(x=factor(PERIOD),count)) + geom_boxplot()
-
-
-ggplot(df_per_game, aes(x = factor(GAME_ID), y = count)) + 
-  geom_bar(stat = "identity")+ 
-  theme(axis.title.x = element_blank())+ 
-  scale_x_discrete(breaks=NULL)
-  
-
-```
-#Player Statistics
-HFreeName
-
-```{r}
-df_per_game = filter(teamdata, EVENTMSGTYPE=="3",HFreeName == "jordan" )%>%group_by(GAME_ID,PERIOD)%>% summarise(count = n())
-df_game = filter(teamdata, EVENTMSGTYPE=="3",HFreeName == "jordan" )%>%group_by(GAME_ID)%>% summarise(count = n())
-df_game = df_game[complete.cases(df_game),]
-mean(df_game$count)
-median(df_game$count)
-range(df_game$count)
-quantile(df_game$count)
-
-df_game[df_game$count > 7,]
-```
-
 
 #Player Statistics
-Dean
+Deandre Jordans Foul Shots
 ```{r}
 df_game = filter(teamdata, EVENTMSGTYPE=="3",HFreeName == "jordan" | VFreeName == "jordan" )%>%group_by(GAME_ID)%>% summarise(count = n())
 df_game = df_game[complete.cases(df_game),]
@@ -154,57 +119,15 @@ quantile(df_game$count)
 
 ggplot(df_game, aes(x=count)) +
     geom_histogram(binwidth=.5, colour="red", fill="white") + 
-  xlab("Number of Fouls")+
+  xlab("Number of Free Thros for Deandre Jordan")+
   ylab("Number of Games")
 
-out = df_game[df_game$count>8,]$GAME_ID
+games = df_game[df_game$count>8,]$GAME_ID
 ```
 
-#Jordan per 4min intervlas
-HFreeName
-
+Take Fouls 
 ```{r}
-df_game = filter(teamdata, EVENTMSGTYPE=="3",HFreeName == "jordan" )%>%group_by(GAME_ID,min4,PERIOD)%>% summarise(count = n())
-
-mean(df_game$count)
-median(df_game$count)
-range(df_game$count)
-quantile(df_game$count)
-#0021400802 Spurs
-#0021400908 Clippers lost to Blazers
-#Games with greater than 75%
-hack = unique(df_game[df_game$count>2,]$GAME_ID)
-
-df_game$gre = as.numeric(df_game$count > 2)
-df_game$cgre = df_game$count * df_game$gre
-
-out = df_game%>%group_by(GAME_ID)%>% summarise(avg = mean(cgre))
-out2 = out[out$avg > 0,]
-
-quantile(out2$avg)
-out2$GAME_ID
-```
-
-#Filter on game and plot fould per 4 min
-```{r}
-df_game = filter(teamdata, EVENTMSGTYPE=="3",HFreeName == "jordan" ,GAME_ID == "0021400599")%>%group_by(Time)%>% summarise(count = n())
-
-df_game = filter(teamdata, EVENTMSGTYPE=="3",HFreeName == "jordan" ,GAME_ID == "0021400599")
-
-a = filter(teamdata,GAME_ID == "0021400599")
-View(a)
-x = 0:(12*60*4)
-y = 0:(12*60*4) * 0
-y[df_game$Time] = df_game$count
-plot(x,y)
-
-p <- ggplot(mry, aes(x=year, y=number, group=rating))
-p + geom_line()
-```
-
-
-```{r}
-df_game =filter(teamdata,HTake==1)%>%group_by(GAME_ID)%>% summarise(count = n())
+df_game =filter(teamdata,HTake==1 | VTake == 1)%>%group_by(GAME_ID)%>% summarise(count = n())
 quantile(df_game$count)
 a = filter(teamdata,HTake==1)%>%group_by(GAME_ID)
 ggplot(df_game, aes(x=count)) +
@@ -213,25 +136,9 @@ ggplot(df_game, aes(x=count)) +
   ylab("Number of Games")
 
 quantile(df_game$count)
-out2 = df_game[df_game$count >= 5,]$GAME_ID 
+games_take = df_game[df_game$count >= 5,]$GAME_ID 
 
 
 ```
 
-```{r}
-df_game =filter(teamdata, EVENTMSGTYPE=="3",VFreeName == "jordan" ,GAME_ID == "0021400659")%>%group_by(PERIOD,min4)%>% summarise(count = n())
-
-a = filter(teamdata,GAME_ID == "0021400659")
-
-quantile(df_game$count)
-a = filter(teamdata,HTake==1)%>%group_by(GAME_ID)
-#View(a)
-ggplot(df_game, aes(x=count)) +
-    geom_histogram(binwidth=.5, colour="black", fill="white")
-
-quantile(df_game$count)
-out2 = df_game[df_game$count > 5,]$GAME_ID
-
-
-```
 
