@@ -37,7 +37,7 @@ df_fouls_game = filter(teamdata, GAME_ID=="0021400020" & (EVENTMSGTYPE=="6" | EV
 # Filter Personal Take Foul counts --> Game 0021400802 has the most PERSONAL TAKE FOULS (Spurs vs Clippers)
 df_ptf <- filter(teamdata, EVENTMSGACTIONTYPE == 28) %>% group_by(GAME_ID) %>% summarise(count = n())
 # Filter out this game
-game = filter(teamdata, GAME_ID=="0021400802")
+game = filter(teamdata, GAME_ID=="0021400659")
 
 # Data manipulation:
 ## Fix SCOREMARGIN
