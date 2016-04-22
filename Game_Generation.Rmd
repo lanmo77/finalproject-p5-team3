@@ -1,5 +1,5 @@
 ---
-title: "Data_Processing"
+title: "Game_Generation"
 author: "Team"
 date: "April 18, 2016"
 output: html_document
@@ -183,95 +183,19 @@ test3 = hack_games("drummond",teamdata3)
 plot_detriot = test3[2]
 games_detriot = test3[1]
 plot_detriot[1]
+
+
 ```
-
-
-
-#ML PORTION
 
 ```{r}
-names = "drummond"
+totalgamelist = unlist(lapply((c(games_detriot,games_rockets,games_clippers)),as.character))
+data_score = read.csv("data.score.csv")
+data_score$V2 = paste("00",data_score$V2, sep = "")
+test = filter(data_score,V2 %in% totalgamelist )
+data_score$Hack = 0
+data_score$Hack[data_score$V2%in%totalgamelist] = 1
 
-df_game = filter(teamdata3, EVENTMSGTYPE=="3",HFreeName%in%names | VFreeName%in%names )%>%group_by(GAME_ID)%>% summarise(count = n())
-  df_game = df_game[complete.cases(df_game),]
-  mean(df_game$count)
-  median(df_game$count)
-  range(df_game$count)
-  quant = quantile(df_game$count)
-  print(quant)
-  a = ggplot(df_game, aes(x=count)) +
-      geom_histogram(binwidth=.5, colour="red", fill="white") + 
-    xlab("Number of Free Throws Per Game for Poor Shooting")+
-    ylab("Number of Games")
-  
-  games = df_game[df_game$count>as.numeric(quantile(df_game$count)[4]),]$GAME_ID
-
-
+team_list = c("Pistons","Clippers","Rockets")
+#V4, V29
+final_df = filter(data_score,V4%in%team_list | V29%in% team_list)
 ```
-
-
-
-
-```{r}
-#By game and by Player Jordan
-game_list = unique(teamdata$GAME_ID)
-df = data.frame(matrix(0,(length(game_list)),12*2))
-
-
-for(i in 1:length(game_list)){
-  onegame = filter(teamdata, GAME_ID == game_list[i], HFreeName == "jordan" | VFreeName == "jordan")
-  grouping = group_by(onegame, min4r)
-  grouping2 = filter(grouping, EVENTMSGTYPE == "3")
-  final = summarise(grouping2, count = n())
-  df$game[i] = as.character(game_list[i])
-  
-  games
-  if(df$game[i] %in% games){
-    #df[i,1:12] = 0
-    df$HACK[i] = 1
-  }else{
-    df$HACK[i] = 0
-  }
-  if(dim(final)[1]==0){
-    #df[i,1:12] = 0
-    print("EMPTY")
-  }else{
-    df[i,final$min4r] = final$count
-  }
-  onegame = filter(teamdata, GAME_ID == game_list[i], is.numeric(SCOREMARGIN), min4r<=12) %>%group_by(min4r)%>%summarise(avg = mean(SCOREMARGIN))
-  
-  if(dim(onegame)[1]==0){
-    df[i,(onegame$min4r+12)] = 0
-    print("EMPTY")
-  }else{
-    df[i,(onegame$min4r+12)] = onegame$avg
-  }
-  
-}
-
-```
-
-
-```{r}
-load("teamstatsData.Rdata")
-load("playerstatsData.Rdata")
-load("visitinghome.Rdata")
-
-```
-
-#Need to pull other teams and output games
-```{r}
-
-load("teamdata.Rdata")
-teamdata = process(teamdata)
-maximin = function(hscore){
-  return (max(hscore) - min(hscore))
-}
-
-df_game = filter(teamdata, hscore!="NULL")%>%group_by(GAME_ID,min4r)%>% summarise(diff_h =maximin(hscore) )
-
-a = filter(teamdata, hscore!="NULL")
-
-```
-
-#Need to combine other 
