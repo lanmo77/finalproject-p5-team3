@@ -224,5 +224,12 @@ for(i in 1:ncol(final_df2)){
   }
 }
 
+saveRDS(final_df2,"Game_Summary_HAS.RDS")
+```
+
+
+```{r}
+c("Hdate","HGAME_ID","HTEAM_ID","HTEAM_ABBREVIATION","HTEAM_CITY","HMIN","HFGM","HFGA")
 
 ```
+
