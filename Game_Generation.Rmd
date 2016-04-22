@@ -190,12 +190,39 @@ plot_detriot[1]
 ```{r}
 totalgamelist = unlist(lapply((c(games_detriot,games_rockets,games_clippers)),as.character))
 data_score = read.csv("data.score.csv")
-data_score$V2 = paste("00",data_score$V2, sep = "")
-test = filter(data_score,V2 %in% totalgamelist )
+load("data.score.Rdata")
+data_score = data.score[-1,]
+data_score$GAME_ID = paste("00",data_score$GAME_ID, sep = "")
+
+
+col_list = colnames(data_score)
+for(i in 1:length(col_list)){
+  if (i>26){
+    col_list[i] = paste("V",col_list[i],sep = "")
+  }else{
+    col_list[i] = paste("H",col_list[i],sep = "")
+
+  }
+}
+colnames(data_score) = col_list
+
 data_score$Hack = 0
-data_score$Hack[data_score$V2%in%totalgamelist] = 1
+data_score$Hack[data_score$GAME_ID%in%totalgamelist] = 1
+
 
 team_list = c("Pistons","Clippers","Rockets")
 #V4, V29
-final_df = filter(data_score,V4%in%team_list | V29%in% team_list)
+final_df = filter(data_score,VTEAM_NAME%in%team_list | HTEAM_NAME%in% team_list)
+final_df2 = data.frame(t(apply(final_df, 1, unlist)))
+
+for(i in 1:ncol(final_df2)){
+  if (i>33 ){
+    final_df2[,i] = as.numeric(as.character(final_df2[,i]))
+  }else if (i>=8 & i<=26){
+    final_df2[,i] = as.numeric(as.character(final_df2[,i]))
+
+  }
+}
+
+
 ```
