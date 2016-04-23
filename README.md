@@ -1,5 +1,10 @@
-# finalproject-p5-team3
-finalproject-p5-team3 created by GitHub Classroom
+# Final project-p5-team3
+
+
+# Directory:
+all files end in 'RDS' 'csv' 'RDS' are in 'data' folder  
+all files end in 'Rmd''R' are in 'lib' folder
+all files end in 'html' are in 'doc' folder
 
 ##Team Member:
 Minnich, Robert Carl: rcm2164@columbia.edu  
