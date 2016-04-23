@@ -165,8 +165,14 @@ games_clippers = hack_games("jordan",teamdata)
 ```
 
 ```{r}
-a = ggplot(games_clippers, aes(x=count)) +
+library(png)
+library(grid)
+img <- readPNG(system.file("img", "download.png", package="png"))
+g <- rasterGrob(img, interpolate=TRUE)
+
+ggplot(games_clippers, aes(x=count)) +
   geom_histogram(binwidth=.5, colour="red", fill="white") + 
+  annotation_custom(g, xmin=-0, xmax=10, ymin=0, ymax=10) +
   ggtitle("LA Clippers - Jordan")+
   xlab("Number of Free Throws Per Game for Poor Shooting")+
   ylab("Number of Games")
@@ -248,7 +254,7 @@ hack_games$GAME_ID = as.character(hack_games$GAME_ID)
 for(i in 1:nrow(hack_games)){
   for(j in 1:nrow(final_df2))
     if(final_df2$HGAME_ID[j] == hack_games$GAME_ID[i]){
-      final_df2$HAS_Count[j] = hack_games$count[i]
+      final_df2$HAS_Count[j] = hack_games$count[i]/2
     }
 }
 #test = left_join(x = final_df2, y = hack_games, by = c("HGAME_ID"="GAME_ID"), all.x = TRUE)
