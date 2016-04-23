@@ -1,0 +1,277 @@
+---
+title: "Data_Processing"
+author: "Team"
+date: "April 18, 2016"
+output: html_document
+---
+#EVENTMSGTYPE
+1 - Make 2 - Miss 3 - Free Throw 4 - Rebound 5 - out of bounds / Turnover / Steal 6 - Personal Foul 7 - Violation 8 - Substitution 9 - Timeout 10 - Jumpball 12 - Start Q1? 13 - Start Q2?
+
+#EVENTMSGACTIONTYPE
+1 - Jumpshot 2 - Lost ball Turnover 3 - ? 4 - Traveling Turnover / Off Foul 5 - Layup 7 - Dunk 10 - Free throw 1-1 11 - Free throw 1-2 12 - Free throw 2-2 40 - out of bounds 41 - Block/Steal 42 - Driving Layup 50 - Running Dunk 52 - Alley Oop Dunk 55 - Hook Shot 57 - Driving Hook Shot 58 - Turnaround hook shot 66 - Jump Bank Shot 71 - Finger Roll Layup 72 - Putback Layup 108 - Cutting Dunk Shot
+
+
+
+```{r setup, include=FALSE}
+setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
+library(dplyr)
+library(ggplot2)
+load("teamdata.Rdata")
+process <- function(teamdata){
+  teamdata$EVENTMSGTYPE = as.numeric(teamdata$EVENTMSGTYPE)
+  teamdata$GAME_ID = as.factor(as.character(teamdata$GAME_ID))
+  teamdata$EVENTMSGTYPE = as.numeric(teamdata$EVENTMSGTYPE)
+  teamdata$HOMEDESCRIPTION = tolower(as.character(teamdata$HOMEDESCRIPTION))
+  teamdata$VISITORDESCRIPTION = tolower(as.character(teamdata$VISITORDESCRIPTION))
+  teamdata$PERIOD = as.numeric(teamdata$PERIOD)
+  teamdata$EVENTNUM = (as.numeric(teamdata$EVENTNUM))
+  teamdata$WCTIMESTRING = as.character(teamdata$WCTIMESTRING)
+  teamdata$PCTIMESTRING = as.character(teamdata$PCTIMESTRING)
+  teamdata$SCORE = as.character(teamdata$SCORE)
+  
+  teamdata$hscore = "NULL"
+  teamdata$vscore = "NULL"
+  
+  teamdata$hscore <- as.numeric(unlist(lapply(strsplit(teamdata$SCORE, "\\-"), "[", 1)))
+  teamdata$vscore <- as.numeric(unlist(lapply(strsplit(teamdata$SCORE, "-"), "[", 2)))
+
+  teamdata = teamdata[!duplicated(teamdata),] 
+  
+  teamdata$SCOREMARGIN[1] = '0'
+  for(i in 1:nrow(teamdata)) {
+    if(teamdata$SCOREMARGIN[i] == 'TIE')
+      teamdata$SCOREMARGIN[i] <- '0'
+    else if(teamdata$SCOREMARGIN[i] == 'NULL')
+      teamdata$SCOREMARGIN[i] <- teamdata$SCOREMARGIN[i - 1]
+  }
+  teamdata$SCOREMARGIN <- as.numeric(teamdata$SCOREMARGIN)
+  
+  # 
+  # df_fouls = filter(teamdata, EVENTMSGTYPE=="6" ) %>% group_by(GAME_ID) %>% summarise(count = n())
+  # #0021400020 had the most fouls Thunder vs Clippers
+  # which.max(df_fouls$count)
+  # ggplot(df_fouls, aes(x=count)) +
+  #     geom_histogram(binwidth=1, alpha=.5, position="identity")
+  # 
+  
+  
+  
+  teamdata$HFoulName = "NULL"
+  teamdata$HMake = "NULL"
+  teamdata$HFreeName = "NULL"
+  teamdata$HTake = 0
+  
+  teamdata$VFoulName = "NULL"
+  teamdata$VMake = "NULL"
+  teamdata$VFreeName = "NULL"
+  teamdata$VTake = 0
+  
+  teamdata$min <- lapply(strsplit(teamdata$PCTIMESTRING, ":"), "[", 1)
+  teamdata$sec <- lapply(strsplit(teamdata$PCTIMESTRING, ":"), "[", 2)
+  
+  teamdata$min2 <- floor(as.numeric(teamdata$min)/2) 
+  
+  teamdata$Time <- (as.numeric(teamdata$PERIOD) - 1)*12*60 +abs((as.numeric(teamdata$min)-12)*60 - (0-as.numeric(teamdata$sec)))
+  
+  for(i in 1:nrow(teamdata)){
+    if(grepl("foul", teamdata$HOMEDESCRIPTION[i])){
+      if(grepl("take", teamdata$HOMEDESCRIPTION[i])){
+        teamdata$HFoulName[i] = unlist(strsplit(teamdata$HOMEDESCRIPTION[i],"\\s"))[1]
+        teamdata$HTake[i] =1
+        teamdata$HMake[i] = "NULL"}
+      else{
+        teamdata$HFoulName[i] = unlist(strsplit(teamdata$HOMEDESCRIPTION[i],"\\s"))[1]
+        teamdata$HMake[i] = "NULL"
+        }
+    }
+      else if(grepl("miss", teamdata$HOMEDESCRIPTION[i]) & grepl("foul", teamdata$HOMEDESCRIPTION[i])){
+      teamdata$HFreeName[i] = unlist(strsplit(teamdata$HOMEDESCRIPTION[i],"\\s"))[2]
+      teamdata$HMake[i] = 0
+  }
+    else if(grepl("free", teamdata$HOMEDESCRIPTION[i])){
+      teamdata$HFreeName[i] = unlist(strsplit(teamdata$HOMEDESCRIPTION[i],"\\s"))[1]
+      teamdata$HMake[i] = 1
+    }else{
+      teamdata$HFreeName[i] = "NULL"
+      teamdata$HFoulName[i] = "NULL"
+      teamdata$HMake[i] = "NULL"
+    }
+    
+    if(grepl("foul", teamdata$VISITORDESCRIPTION[i])){
+      if(grepl("take", teamdata$VISITORDESCRIPTION[i])){
+        teamdata$VFoulName[i] = unlist(strsplit(teamdata$VISITORDESCRIPTION[i],"\\s"))[1]
+        teamdata$VTake[i] =1
+        teamdata$VMake[i] = "NULL"}
+      else{
+        teamdata$VFoulName[i] = unlist(strsplit(teamdata$VISITORDESCRIPTION[i],"\\s"))[1]
+        teamdata$VMake[i] = "NULL"
+        }
+    }
+      else if(grepl("miss", teamdata$VISITORDESCRIPTION[i])){
+      teamdata$VFreeName[i] = unlist(strsplit(teamdata$VISITORDESCRIPTION[i],"\\s"))[2]
+      teamdata$VMake[i] = 0
+  }
+    else if(grepl("free", teamdata$VISITORDESCRIPTION[i])){
+      teamdata$VFreeName[i] = unlist(strsplit(teamdata$VISITORDESCRIPTION[i],"\\s"))[1]
+      teamdata$VMake[i] = 1
+    }else{
+      teamdata$VFreeName[i] = "NULL"
+      teamdata$VFoulName[i] = "NULL"
+      teamdata$VMake[i] = "NULL"
+    }
+  }
+  
+  teamdata$min4 <- floor(as.numeric(teamdata$min)/4)
+  teamdata$min4r <-floor(((teamdata$Time)/60)/4) + 1
+  teamdata$min4r[floor(teamdata$Time)==2880] = 12
+  
+  teamdata$SCORE = as.character(teamdata$SCORE)
+
+  teamdata$hscore = "NULL"
+  teamdata$vscore = "NULL"
+  
+  teamdata$hscore <- as.numeric(unlist(lapply(strsplit(teamdata$SCORE, "\\-"), "[", 1)))
+  teamdata$vscore <- as.numeric(unlist(lapply(strsplit(teamdata$SCORE, "-"), "[", 2)))
+
+
+return(teamdata)
+  }
+```
+
+```{r}
+
+hack_games = function(names,teamdata){
+  df_game = filter(teamdata, EVENTMSGTYPE=="3",HFreeName%in%names | VFreeName%in%names )%>%group_by(GAME_ID)%>% summarise(count = n())
+  df_game = df_game[complete.cases(df_game),]
+  mean(df_game$count)
+  median(df_game$count)
+  range(df_game$count)
+  quant = quantile(df_game$count)
+  print(quant)
+  a = ggplot(df_game, aes(x=count)) +
+      geom_histogram(binwidth=.5, colour="red", fill="white") + 
+    xlab("Number of Free Throws Per Game for Poor Shooting")+
+    ylab("Number of Games")
+  
+  games = df_game[df_game$count>as.numeric(quantile(df_game$count)[4]),]$GAME_ID
+  return (list(games,a))
+}
+
+
+```
+
+```{r}
+load("teamdata.Rdata")
+teamdata = process(teamdata)
+test1 = hack_games("jordan",teamdata)
+plot_clippers = test1[2]
+games_clippers = test1[1]
+plot_clippers[1]
+
+
+
+load("teamdata2.Rdata")
+teamdata2 = process(teamdata2)
+test2 = hack_games(c("howard","smith"),teamdata2)
+plot_rockets = test2[2]
+games_rockets = test2[1]
+plot_rockets[1]
+
+load("teamdata3.Rdata")
+teamdata3 = process(teamdata3)
+test3 = hack_games("drummond",teamdata3)
+plot_detriot = test3[2]
+games_detriot = test3[1]
+plot_detriot[1]
+```
+
+
+
+#ML PORTION
+
+```{r}
+names = "drummond"
+
+df_game = filter(teamdata3, EVENTMSGTYPE=="3",HFreeName%in%names | VFreeName%in%names )%>%group_by(GAME_ID)%>% summarise(count = n())
+  df_game = df_game[complete.cases(df_game),]
+  mean(df_game$count)
+  median(df_game$count)
+  range(df_game$count)
+  quant = quantile(df_game$count)
+  print(quant)
+  a = ggplot(df_game, aes(x=count)) +
+      geom_histogram(binwidth=.5, colour="red", fill="white") + 
+    xlab("Number of Free Throws Per Game for Poor Shooting")+
+    ylab("Number of Games")
+  
+  games = df_game[df_game$count>as.numeric(quantile(df_game$count)[4]),]$GAME_ID
+
+
+```
+
+
+
+
+```{r}
+#By game and by Player Jordan
+game_list = unique(teamdata$GAME_ID)
+df = data.frame(matrix(0,(length(game_list)),12*2))
+
+
+for(i in 1:length(game_list)){
+  onegame = filter(teamdata, GAME_ID == game_list[i], HFreeName == "jordan" | VFreeName == "jordan")
+  grouping = group_by(onegame, min4r)
+  grouping2 = filter(grouping, EVENTMSGTYPE == "3")
+  final = summarise(grouping2, count = n())
+  df$game[i] = as.character(game_list[i])
+  
+  games
+  if(df$game[i] %in% games){
+    #df[i,1:12] = 0
+    df$HACK[i] = 1
+  }else{
+    df$HACK[i] = 0
+  }
+  if(dim(final)[1]==0){
+    #df[i,1:12] = 0
+    print("EMPTY")
+  }else{
+    df[i,final$min4r] = final$count
+  }
+  onegame = filter(teamdata, GAME_ID == game_list[i], is.numeric(SCOREMARGIN), min4r<=12) %>%group_by(min4r)%>%summarise(avg = mean(SCOREMARGIN))
+  
+  if(dim(onegame)[1]==0){
+    df[i,(onegame$min4r+12)] = 0
+    print("EMPTY")
+  }else{
+    df[i,(onegame$min4r+12)] = onegame$avg
+  }
+  
+}
+
+```
+
+
+```{r}
+load("teamstatsData.Rdata")
+load("playerstatsData.Rdata")
+load("visitinghome.Rdata")
+
+```
+
+#Need to pull other teams and output games
+```{r}
+
+load("teamdata.Rdata")
+teamdata = process(teamdata)
+maximin = function(hscore){
+  return (max(hscore) - min(hscore))
+}
+
+df_game = filter(teamdata, hscore!="NULL")%>%group_by(GAME_ID,min4r)%>% summarise(diff_h =maximin(hscore) )
+
+a = filter(teamdata, hscore!="NULL")
+
+```
+
+#Need to combine other 
