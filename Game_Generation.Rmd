@@ -148,13 +148,9 @@ hack_games = function(names,teamdata){
   range(df_game$count)
   quant = quantile(df_game$count)
   print(quant)
-  a = ggplot(df_game, aes(x=count)) +
-      geom_histogram(binwidth=.5, colour="red", fill="white") + 
-    xlab("Number of Free Throws Per Game for Poor Shooting")+
-    ylab("Number of Games")
   
-  games = df_game[df_game$count>as.numeric(quantile(df_game$count)[4]),]$GAME_ID
-  return (list(games,a))
+  games = df_game[df_game$count>as.numeric(quantile(df_game$count)[4]),]
+  return (games)
 }
 
 
@@ -163,26 +159,43 @@ hack_games = function(names,teamdata){
 ```{r}
 load("teamdata.Rdata")
 teamdata = process(teamdata)
-test1 = hack_games("jordan",teamdata)
-plot_clippers = test1[2]
-games_clippers = test1[1]
-plot_clippers[1]
+games_clippers = hack_games("jordan",teamdata)
+#ames_clippers = test1[1]
+#plot_clippers[1]
+```
 
+```{r}
+a = ggplot(games_clippers, aes(x=count)) +
+  geom_histogram(binwidth=.5, colour="red", fill="white") + 
+  ggtitle("LA Clippers - Jordan")+
+  xlab("Number of Free Throws Per Game for Poor Shooting")+
+  ylab("Number of Games")
 
+```
 
+```{r}
 load("teamdata2.Rdata")
 teamdata2 = process(teamdata2)
-test2 = hack_games(c("howard","smith"),teamdata2)
-plot_rockets = test2[2]
-games_rockets = test2[1]
-plot_rockets[1]
+games_rockets = hack_games(c("howard","smith"),teamdata2)
+```
 
+```{r}
+b = ggplot(games_rockets, aes(x=count)) +
+  geom_histogram(binwidth=.5, colour="red", fill="white") + 
+  ggtitle("Houston Rockets - Howard and Smith")+
+  xlab("Number of Free Throws Per Game for Poor Shooting")+
+  ylab("Number of Games")
+```
+
+```{r}
 load("teamdata3.Rdata")
 teamdata3 = process(teamdata3)
-test3 = hack_games("drummond",teamdata3)
-plot_detriot = test3[2]
-games_detriot = test3[1]
-plot_detriot[1]
+games_detriot = hack_games("drummond",teamdata3)
+c = ggplot(games_detriot, aes(x=count)) +
+  geom_histogram(binwidth=.5, colour="red", fill="white") + 
+  ggtitle("Detriot Pistions - Drummond")+
+  xlab("Number of Free Throws Per Game for Poor Shooting")+
+  ylab("Number of Games")
 
 
 ```
@@ -192,7 +205,7 @@ totalgamelist = unlist(lapply((c(games_detriot,games_rockets,games_clippers)),as
 data_score = read.csv("data.score.csv")
 load("data.score.Rdata")
 data_score = data.score[-1,]
-data_score$GAME_ID = paste("00",data_score$GAME_ID, sep = "")
+#zdata_score$GAME_ID = paste("00",data_score$GAME_ID, sep = "")
 
 
 col_list = colnames(data_score)
@@ -207,7 +220,7 @@ for(i in 1:length(col_list)){
 colnames(data_score) = col_list
 
 data_score$Hack = 0
-data_score$Hack[data_score$GAME_ID%in%totalgamelist] = 1
+data_score$Hack[data_score$VGAME_ID%in%totalgamelist] = 1
 
 
 team_list = c("Pistons","Clippers","Rockets")
@@ -223,13 +236,33 @@ for(i in 1:ncol(final_df2)){
 
   }
 }
+```
 
+```{r}
+
+hack_games = rbind(games_clippers,games_detriot,games_rockets)
+final_df2$HAS_Count = 0
+final_df2$HGAME_ID = as.character(final_df2$HGAME_ID)
+hack_games$GAME_ID = as.character(hack_games$GAME_ID)
+
+for(i in 1:nrow(hack_games)){
+  for(j in 1:nrow(final_df2))
+    if(final_df2$HGAME_ID[j] == hack_games$GAME_ID[i]){
+      final_df2$HAS_Count[j] = hack_games$count[i]
+    }
+}
+#test = left_join(x = final_df2, y = hack_games, by = c("HGAME_ID"="GAME_ID"), all.x = TRUE)
+
+#left_join(finanl)
+```
+
+
+```{r}
 saveRDS(final_df2,"Game_Summary_HAS.RDS")
 ```
 
 
 ```{r}
-c("Hdate","HGAME_ID","HTEAM_ID","HTEAM_ABBREVIATION","HTEAM_CITY","HMIN","HFGM","HFGA")
 
 ```
 
