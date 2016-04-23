@@ -12,6 +12,8 @@ library(dplyr)
 library(tidyr)
 library(RColorBrewer)
 library(igraph)
+library(ndtv)
+library(network)
 load('teamDataf.Rdata')
 
 #load the data
@@ -36,7 +38,7 @@ DET=as.data.frame(DET)
 
 
 DET.new=DET[,c('HAS_Count','OPP')]
-DET.new$HAS_Count=as.numeric(DET.new$HAS_Count)
+DET.new$HAS_Count=as.numeric(as.character(DET.new$HAS_Count))
 
 DET.new=aggregate(DET.new[,1]~DET.new[,2],data=DET.new,FUN=mean)
 
@@ -87,7 +89,7 @@ HOU=as.data.frame(HOU)
 
 
 HOU.new=HOU[,c('HAS_Count','OPP')]
-HOU.new$HAS_Count=as.numeric(HOU.new$HAS_Count)
+HOU.new$HAS_Count=as.numeric(as.character(HOU.new$HAS_Count))
 
 HOU.new=aggregate(HOU.new[,1]~HOU.new[,2],data=HOU.new,FUN=mean)
 
@@ -139,7 +141,7 @@ LAC=as.data.frame(LAC)
 
 
 LAC.new=LAC[,c('HAS_Count','OPP')]
-LAC.new$HAS_Count=as.numeric(LAC.new$HAS_Count)
+LAC.new$HAS_Count=as.numeric(as.character(LAC.new$HAS_Count))
 
 LAC.new=aggregate(LAC.new[,1]~LAC.new[,2],data=LAC.new,FUN=mean)
 
@@ -181,6 +183,22 @@ LAC.new
  <img src="/Users/sunxiaohan/Desktop/project5/LAC.png" height="400px" width="300px" />
 
 ```{r}
+nodes3=as.data.frame(nodes3)
+names(nodes3)='id'
 
+net4 <- network(links3,  vertex.attr=nodes3, matrix.type="edgelist", 
+                loops=F, multiple=F, ignore.eval = F)
+
+
+
+
+
+render.d3movie(net3, usearrows = F, displaylabels = F, 
+       vertex.border="#ffffff", vertex.col =  net3 %v% "col",
+       vertex.cex = (net3 %v% "audience.size")/8, 
+       edge.lwd = (net3 %e% "weight")/3, edge.col = '#55555599',
+       vertex.tooltip = paste("<b>Name:</b>", (net3 %v% 'name') , "<br>",
+                              "<b>Type:</b>", (net3 %v% 'size')),
+       launchBrowser=F, filename="Media-Network.html", output.mode='inline')  
 
 ```
