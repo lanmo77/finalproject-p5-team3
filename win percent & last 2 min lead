@@ -1,0 +1,71 @@
+Wins contribution
+```{r}
+#Clippers home result
+C_H_W = filter(teamdata_h, PERIOD > 3, min==0, sec==0)
+C_H_W$margin=C_H_W$hscore-C_H_W$vscore
+C_H_W = filter(C_H_W, margin>0 | margin<0, HOMEDESCRIPTION=="null", VISITORDESCRIPTION=="null")
+C_H_W$Win=1
+C_H_W$Win[C_H_W$margin<0]=0
+sum(C_H_W$Win)
+
+
+#Clippers visit result
+C_V_W = filter(teamdata_v, PERIOD > 3, min==0, sec==0)
+C_V_W$margin=C_V_W$hscore-C_V_W$vscore
+C_V_W = filter(C_V_W, margin>0 | margin<0, HOMEDESCRIPTION=="null", VISITORDESCRIPTION=="null")
+C_V_W$Win=1
+C_V_W$Win[C_V_W$margin>0]=0
+sum(C_V_W$Win)
+
+#Win percent (needs Hack data)
+Cwin_per=(sum(C_H_W$Win)+sum(C_V_W$Win))/(length(C_H_W$Win)+length(C_V_W$Win));Cwin_per
+
+
+# Define last 2 min(2:18-1:45)(no need Hack)
+#home
+C_H2.1 = filter(teamdata_h, PERIOD == 4, min==2, sec<18)
+C_H2.2 = filter(teamdata_h, PERIOD == 4, min==1, sec>45)
+C_H2=bind_rows(C_H2.1, C_H2.2)
+length(unique(C_H2$GAME_ID))
+
+#home margin in last 2 min
+Cdf_gameh_2min = data.frame()
+for(i in unique(C_H2$"GAME_ID")){
+  df = filter(C_H2, C_H2$"GAME_ID" == i)
+  median_margin = median(df$SCOREMARGIN)
+  c = cbind(median_margin,i)
+  Cdf_gameh_2min = rbind(Cdf_gameh_2min,c)
+}
+
+
+#vistor
+C_V2.1 = filter(teamdata_v, PERIOD == 4, min==2, sec<18)
+C_V2.2 = filter(teamdata_v, PERIOD == 4, min==1, sec>45)
+C_V2=bind_rows(C_V2.1, C_V2.2)
+length(unique(C_V2$GAME_ID))
+
+#vistor margin in last 2 min
+Cdf_gamev_2min = data.frame()
+for(i in unique(C_V2$"GAME_ID")){
+  df = filter(C_V2, C_V2$"GAME_ID" == i)
+  median_margin = median(df$SCOREMARGIN)*(-1)
+  D = cbind(median_margin,i)
+  Cdf_gamev_2min = rbind(Cdf_gamev_2min,D)
+}
+
+
+last_2min=bind_rows(Cdf_gamev_2min, Cdf_gameh_2min)
+
+#If wants to win, one should lead Clippers how much points by last 2 mins
+lose_game_V=filter(C_V_W, Win==0)
+lose_game_H=filter(C_H_W, Win==0)
+lose_game=bind_rows(lose_game_H, lose_game_V)
+lg2 = filter(last_2min, i %in% lose_game$"GAME_ID")
+
+
+lead_2min=median(as.numeric(lg2$median_margin));lead_2min
+
+
+
+
+```
