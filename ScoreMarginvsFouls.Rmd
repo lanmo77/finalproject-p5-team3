@@ -43,7 +43,8 @@ df_ptf <- filter(teamdata, EVENTMSGACTIONTYPE == 28) %>% group_by(GAME_ID) %>% s
 
 ```{r setup, include=FALSE}
 # Filter out any game (change ID)
-game = filter(teamdata, GAME_ID=="0021400802")
+# 0021400659
+game = filter(teamdata, GAME_ID=="0021400659")
 
 # Data manipulation:
 ## Fix SCOREMARGIN
@@ -70,16 +71,15 @@ game$SECINTOGAME <- 2880 - period_to_seconds(game$MINSEC)
 ## Compute number of fouls by hacking team in every four minute interval
 game$GROUP <- ceiling(game$SECINTOGAME / 240)
 # "HOMEDESCRIPTION == NULL" makes sure we are only getting visitor team's fouls. CHANGE AS NECESSARY.
-counts <- data.frame(GROUP = c(1:12))
-counts <- filter(game, EVENTMSGTYPE == '6' & HOMEDESCRIPTION == 'NULL') %>% count(GROUP)
-game$NUMFOULS <- counts[match(game$GROUP, counts$GROUP), "n"]
+counts <- filter(game, EVENTMSGTYPE == '6' & VISITORDESCRIPTION == 'NULL') %>% count(GROUP)
+game$NUMFOULS <- unlist(counts[match(game$GROUP, counts$GROUP), "n"])
 game$NUMFOULS[is.na(game$NUMFOULS)] <- 0
 
 # Create FOULS data frame and Hack a Shaq
 FOULS <- data.frame(GROUP = c(1:12))
 FOULS$COUNT <- counts[match(FOULS$GROUP, counts$GROUP), 'n']
 FOULS$COUNT[is.na(FOULS$COUNT)] <- 0
-FOULS$COUNT =as.numeric(unlist(FOULS$COUNT))
+FOULS$COUNT <- as.numeric(unlist(FOULS$COUNT))
 for(i in 1:nrow(FOULS)) {
   if(FOULS$COUNT[i] > quantile(FOULS$COUNT, 0.75)) {
     FOULS$HAS[i] = TRUE
@@ -88,9 +88,14 @@ for(i in 1:nrow(FOULS)) {
     FOULS$HAS[i] = FALSE
   }
 }
+FOULS$PERCENTILE <- ecdf(FOULS$COUNT)(FOULS$COUNT)
 game$HAS <- FOULS[match(game$GROUP, FOULS$GROUP), "HAS"]
+game$FOULPERCENTILE <- FOULS[match(game$GROUP, FOULS$GROUP), "PERCENTILE"]
 
-# Plot SCOREMARGIN vs TIME and NUMFOULS vs TIME
-ggplot(game, aes(game$SECINTOGAME, game$SCOREMARGIN)) + geom_line(aes(colour = game$NUMFOULS)) + scale_x_continuous(breaks = c(0, 720, 1440, 2160, 2880), labels = c('P1', 'P2', 'P3', 'P4', 'Final')) + labs(title = 'Spurs vs Clippers', x = 'Period', y = 'Score Margin') + theme(legend.title=element_blank())
+# Plot SCOREMARGIN vs TIME and FOULPERCENTILE over each 4 minute interval
+ggplot(game, aes(game$SECINTOGAME, game$SCOREMARGIN)) + geom_line(aes(colour = game$FOULPERCENTILE)) + scale_x_continuous(breaks = c(0, 720, 1440, 2160, 2880), labels = c('P1', 'P2', 'P3', 'P4', 'Final')) + labs(title = 'HOME (+) vs VISITOR (-)', x = 'Period', y = 'Score Margin') + theme(legend.title=element_blank())
+
+# Plot SCOREMARGIN vs TIME and NUMFOULS over each 4 minute interval
+ggplot(game, aes(game$SECINTOGAME, game$SCOREMARGIN)) + geom_line(aes(colour = game$NUMFOULS)) + scale_x_continuous(breaks = c(0, 720, 1440, 2160, 2880), labels = c('P1', 'P2', 'P3', 'P4', 'Final')) + labs(title = 'HOME (+) vs VISITOR (-)', x = 'Period', y = 'Score Margin') + theme(legend.title=element_blank())
 
 ```
