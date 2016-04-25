@@ -1,0 +1,204 @@
+---
+title: "Network Plots"
+author: "Yuhan Sun"
+date: "April 21, 2016"
+output: html_document
+---
+
+
+# Data Preparation
+```{r}
+library(dplyr)
+library(tidyr)
+library(RColorBrewer)
+library(igraph)
+library(ndtv)
+library(network)
+load('teamDataf.Rdata')
+
+#load the data
+gamedata=readRDS('/Users/sunxiaohan/Desktop/github/finalproject-p5-team3/Game_Summary_HAS.RDS')
+gamedata=gamedata[,c('HTEAM_ID','HTEAM_ABBREVIATION','VTEAM_ID','VTEAM_ABBREVIATION','Hack','HAS_Count')]
+
+
+
+hackdata=filter(gamedata,Hack==1)
+
+```
+
+# DET
+```{r}
+
+DET=filter(hackdata,HTEAM_ABBREVIATION=='DET'|VTEAM_ABBREVIATION=='DET')
+DET['OPP']=DET$HTEAM_ABBREVIATION
+ind=(DET$OPP=='DET')
+DET=as.matrix(DET)
+DET[ind,'OPP']=DET[ind,'VTEAM_ABBREVIATION']
+DET=as.data.frame(DET)
+
+
+DET.new=DET[,c('HAS_Count','OPP')]
+DET.new$HAS_Count=as.numeric(as.character(DET.new$HAS_Count))
+
+DET.new=aggregate(DET.new[,1]~DET.new[,2],data=DET.new,FUN=mean)
+
+
+
+nodes1=as.data.frame(matrix(nrow=nrow(DET.new)+1))
+nodes1['id']=c('DET',as.character(DET.new[,1]))
+nodes1=nodes1[,-1]
+
+links1=as.data.frame(matrix(nrow=nrow(DET.new)))
+links1['from']='DET'
+links1['to']=DET.new$`DET.new[, 2]`
+links1=links1[,-1]
+links1['weight']=DET.new$`DET.new[, 1]`
+
+
+net1 <- graph.data.frame(links1, nodes1, directed=T)
+V(net1)$size=c(10,links1$weight*10)
+
+
+
+V(net1)$color='light blue'
+
+
+# Set edge width based on weight:
+E(net1)$width <- E(net1)$weight/6
+
+#change arrow size and edge color:
+E(net1)$arrow.size <- .2
+E(net1)$edge.color <- "gray80"
+E(net1)$width <- 1+E(net1)$weight/12
+E(net1)$length=links1$weight*10
+
+plot(net1,vertex.label.family="Arial Black",main='HAS for DET') 
+
+DET.new
+
+```
+ <img src="finalproject-p5-team3/figs/DET.png" height="400px" width="300px" />
+# HOU
+```{r}
+HOU=filter(hackdata,HTEAM_ABBREVIATION=='HOU'|VTEAM_ABBREVIATION=='HOU')
+HOU['OPP']=HOU$HTEAM_ABBREVIATION
+ind=(HOU$OPP=='HOU')
+HOU=as.matrix(HOU)
+HOU[ind,'OPP']=HOU[ind,'VTEAM_ABBREVIATION']
+HOU=as.data.frame(HOU)
+
+
+HOU.new=HOU[,c('HAS_Count','OPP')]
+HOU.new$HAS_Count=as.numeric(as.character(HOU.new$HAS_Count))
+
+HOU.new=aggregate(HOU.new[,1]~HOU.new[,2],data=HOU.new,FUN=mean)
+
+
+
+nodes2=as.data.frame(matrix(nrow=nrow(HOU.new)+1))
+nodes2['id']=c('HOU',as.character(HOU.new[,1]))
+nodes2=nodes2[,-1]
+
+links2=as.data.frame(matrix(nrow=nrow(HOU.new)))
+links2['from']='HOU'
+links2['to']=HOU.new$`HOU.new[, 2]`
+links2=links2[,-1]
+links2['weight']=HOU.new$`HOU.new[, 1]`
+
+
+net2 <- graph.data.frame(links2, nodes2, directed=T)
+V(net2)$size=c(10,links2$weight*8)
+
+
+
+V(net2)$color='light blue'
+
+
+# Set edge width based on weight:
+E(net2)$width <- E(net2)$weight/6
+
+#change arrow size and edge color:
+E(net2)$arrow.size <- .2
+E(net2)$edge.color <- "gray80"
+E(net2)$width <- 1+E(net2)$weight/12
+E(net2)$length=links2$weight*10
+
+plot(net2,vertex.label.family="Arial Black",main='HOU')
+
+HOU.new
+
+```
+ <img src="/Users/sunxiaohan/Desktop/project5/HOU.png" height="400px" width="300px" />
+
+# LAC
+```{r}
+LAC=filter(hackdata,HTEAM_ABBREVIATION=='LAC'|VTEAM_ABBREVIATION=='LAC')
+LAC['OPP']=LAC$HTEAM_ABBREVIATION
+ind=(LAC$OPP=='LAC')
+LAC=as.matrix(LAC)
+LAC[ind,'OPP']=LAC[ind,'VTEAM_ABBREVIATION']
+LAC=as.data.frame(LAC)
+
+
+LAC.new=LAC[,c('HAS_Count','OPP')]
+LAC.new$HAS_Count=as.numeric(as.character(LAC.new$HAS_Count))
+
+LAC.new=aggregate(LAC.new[,1]~LAC.new[,2],data=LAC.new,FUN=mean)
+
+
+
+nodes3=as.data.frame(matrix(nrow=nrow(LAC.new)+1))
+nodes3['id']=c('LAC',as.character(LAC.new[,1]))
+nodes3=nodes3[,-1]
+
+links3=as.data.frame(matrix(nrow=nrow(LAC.new)))
+links3['from']='LAC'
+links3['to']=LAC.new$`LAC.new[, 2]`
+links3=links3[,-1]
+links3['weight']=LAC.new$`LAC.new[, 1]`
+
+
+net3 <- graph.data.frame(links3, nodes3, directed=T)
+V(net3)$size=c(10,links3$weight*8)
+
+
+
+V(net3)$color='light blue'
+
+
+# Set edge width based on weight:
+E(net3)$width <- E(net3)$weight/6
+
+#change arrow size and edge color:
+E(net3)$arrow.size <- .2
+E(net3)$edge.color <- "gray80"
+E(net3)$width <- 1+E(net3)$weight/12
+E(net3)$length=links3$weight*10
+
+plot(net3,vertex.label.family="Arial Black",main='HAS for LAC') 
+
+LAC.new
+```
+
+ <img src="/Users/sunxiaohan/Desktop/project5/LAC.png" height="400px" width="300px" />
+
+```{r}
+nodes3=as.data.frame(nodes3)
+names(nodes3)='id'
+
+net4 <- network(links3,  vertex.attr=nodes3, matrix.type="edgelist", 
+                loops=F, multiple=F, ignore.eval = F)
+
+
+
+
+
+render.d3movie(net3, usearrows = F, displaylabels = F, 
+       vertex.border="#ffffff", vertex.col =  net3 %v% "col",
+       vertex.cex = (net3 %v% "audience.size")/8, 
+       edge.lwd = (net3 %e% "weight")/3, edge.col = '#55555599',
+       vertex.tooltip = paste("<b>Name:</b>", (net3 %v% 'name') , "<br>",
+                              "<b>Type:</b>", (net3 %v% 'size')),
+       launchBrowser=F, filename="Media-Network.html", output.mode='inline')  
+
+```

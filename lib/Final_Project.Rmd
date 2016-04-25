@@ -1,0 +1,73 @@
+---
+title: "Final_Presentation"
+author: "Team"
+date: "April 18, 2016"
+output: html_document
+---
+
+#Introduction to Hack a Shaq
+```{r setup, include=FALSE}
+
+
+```
+
+#Hack A Shaq
+
+
+<iframe width="854" height="480" src="https://www.youtube.com/embed/-S_soY5Jg_Q" frameborder="0" allowfullscreen></iframe>
+
+<iframe width="854" height="480" src="https://www.youtube.com/embed/9B4czGjeOzA" frameborder="0" allowfullscreen></iframe>
+
+<style>
+	.demo {
+		border:1px solid #C0C0C0;
+		border-collapse:collapse;
+		padding:5px;
+	}
+	.demo th {
+		border:1px solid #C0C0C0;
+		padding:5px;
+		background:#F0F0F0;
+	}
+	.demo td {
+		border:1px solid #C0C0C0;
+		padding:5px;
+	}
+</style>
+<table class="demo">
+	<caption>Table 1</caption>
+	<thead>
+	<tr>
+		<th>Header 1</th>
+		<th>Header 2</th>
+		<th>Header 3</th>
+		<th>Header 4</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>&nbsp;test</td>
+		<td>&nbsp;t</td>
+		<td>setse</td>
+		<td>aasDF</td>
+	</tr>
+	<tr>
+		<td><br></td>
+		<td>est&nbsp;</td>
+		<td>&nbsp;DSFASDF</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;ASDF</td>
+		<td>DFASDFSA&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;ASDF</td>
+		<td>&nbsp;</td>
+	</tr>
+	</tbody>
+</table>
