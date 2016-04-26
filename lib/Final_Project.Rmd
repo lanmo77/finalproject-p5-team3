@@ -1,73 +1,68 @@
 ---
-title: "Final_Presentation"
-author: "Team"
-date: "April 18, 2016"
+title: "Final Presentation"
 output: html_document
 ---
 
-#Introduction to Hack a Shaq
+#Introduction to Hack-a-Shaq
+
+##What is a Hack-a-Shaq?
+
+<div style="text-align: center;" align = "center">
+
+<iframe width="640" height="480" align = "center" src="https://www.youtube.com/embed/-S_soY5Jg_Q" frameborder="0" allowfullscreen></iframe>
+
+</div>
+
+##Why Hack-a-Shaq....
+###or a-Joran, or a-Smith, or a-Howard?
+
+<div style="text-align: center;" align = "center">
+
+<iframe width="640" height="360" src="https://www.youtube.com/embed/YwYXAzsTsdw" frameborder="0" allowfullscreen></iframe>
+</div>
+#19.690 million USD
+Thats 19.57million more than an average data scientist makes per year!
+
 ```{r setup, include=FALSE}
+setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
+# library(ggplot2)
+# load("income.Rdata")
+# 
+# ggplot(income, aes(x=PINCP)) +
+#   geom_density(alpha=.3)
+#   
+# geom_histogram(bins = 30) + 
+#   geom_vline(xintercept = lowbound)+
+#  annotate("text", x = lowbound + 4, y = height, label = "Hack-A-Jordan")+
+#    annotate("text", x = lowbound-3, y = height, label = "No Hack")+
+#   ggtitle("LA Clippers - Jordan")+
+#     xlab("Number of Free Throws Per Game")+
+#     ylab("Number of Games")
+
+load("data/ClippersTwoMinIntervals.RData")
+load("data/PistonsTwoMinIntervals.RData")
+load("data/RocketsTwoMinIntervals.RData")
 
 
 ```
 
-#Hack A Shaq
+#In the News
 
 
-<iframe width="854" height="480" src="https://www.youtube.com/embed/-S_soY5Jg_Q" frameborder="0" allowfullscreen></iframe>
 
-<iframe width="854" height="480" src="https://www.youtube.com/embed/9B4czGjeOzA" frameborder="0" allowfullscreen></iframe>
+#Question: Does Hack-A-Shaq work?
 
-<style>
-	.demo {
-		border:1px solid #C0C0C0;
-		border-collapse:collapse;
-		padding:5px;
-	}
-	.demo th {
-		border:1px solid #C0C0C0;
-		padding:5px;
-		background:#F0F0F0;
-	}
-	.demo td {
-		border:1px solid #C0C0C0;
-		padding:5px;
-	}
-</style>
-<table class="demo">
-	<caption>Table 1</caption>
-	<thead>
-	<tr>
-		<th>Header 1</th>
-		<th>Header 2</th>
-		<th>Header 3</th>
-		<th>Header 4</th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr>
-		<td>&nbsp;test</td>
-		<td>&nbsp;t</td>
-		<td>setse</td>
-		<td>aasDF</td>
-	</tr>
-	<tr>
-		<td><br></td>
-		<td>est&nbsp;</td>
-		<td>&nbsp;DSFASDF</td>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td>&nbsp;ASDF</td>
-		<td>DFASDFSA&nbsp;</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td>&nbsp;ASDF</td>
-		<td>&nbsp;</td>
-	</tr>
-	</tbody>
-</table>
+<div style="text-align: center;">
+
+  <span style="float:left;width: 50%;">
+  <IMG SRC="../figs/Clippers_Dist.png" float = "right" ALT="image">
+  </span>
+  
+  <span style="float:right;width: 50%;">
+  <IMG SRC="../figs/Pistons_Dist.png" float = "right" ALT="image">
+  </span>
+  <IMG SRC="../figs/Rockets_Dist.png" float = "center" ALT="image">
+
+</div>
+
+<script type="text/javascript"src="//www.google.com/trends/embed.js?hl=en-US&q=Hack+a+Shaq,+Hack+a+Jordan,+Hack-a-Shaq,+Hack+NBA&cmpt=q&tz=Etc/GMT%2B4&tz=Etc/GMT%2B4&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=500&h=330"></script>

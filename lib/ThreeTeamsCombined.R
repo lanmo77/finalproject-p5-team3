@@ -1,4 +1,6 @@
-setwd("~/Google Drive/2016 Spring/Applied Data Science/Project 5/finalproject-p5-team3Tara")
+#setwd("~/Google Drive/2016 Spring/Applied Data Science/Project 5/finalproject-p5-team3Tara")
+setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
+
 library(dplyr)
 library(ggplot2)
 library(lubridate)

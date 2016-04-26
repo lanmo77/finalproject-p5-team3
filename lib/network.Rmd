@@ -8,16 +8,21 @@ output: html_document
 
 # Data Preparation
 ```{r}
-library(dplyr)
 library(tidyr)
 library(RColorBrewer)
 library(igraph)
 library(ndtv)
 library(network)
-load('teamDataf.Rdata')
+library(dplyr)
+
+load('data/teamDataf.Rdata')
 
 #load the data
-gamedata=readRDS('/Users/sunxiaohan/Desktop/github/finalproject-p5-team3/Game_Summary_HAS.RDS')
+setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
+
+#gamedata=readRDS('/Users/sunxiaohan/Desktop/github/finalproject-p5-team3/Game_Summary_HAS.RDS')
+gamedata=readRDS('data/Game_Summary_HAS.RDS')
+
 gamedata=gamedata[,c('HTEAM_ID','HTEAM_ABBREVIATION','VTEAM_ID','VTEAM_ABBREVIATION','Hack','HAS_Count')]
 
 
