@@ -1,16 +1,14 @@
 ---
 title: "Project5_Summary Stats"
 author: "Yuhan Sun"
-date: "April 20, 2016"
 output: html_document
 ---
 
-#Load the data
-```{r}
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
 library(ggplot2)
 library(plotly)
-setwd("~/Desktop/project5")
-load('playerstatsData.Rdata')
+setwd("/Users/sunxiaohan/Desktop/github/finalproject-p5-team3")
+load('Data/playerstatsData.Rdata')
 
 #Tow special case
 dj=playerstatsData[107,]  #Deandre Jordan
@@ -18,7 +16,7 @@ dh=playerstatsData[130,] # Dwight Howard
 ```
 
 # FGM - Field Goals Made
-```{r}
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
 playerstatsData$FGM=as.numeric(playerstatsData$FGM)
 data.fgm=playerstatsData[order(playerstatsData$FGM),c('PLAYER_NAME','TEAM_ABBREVIATION','FGM')]
 ind=seq(1:dim(data.fgm)[1])
@@ -30,9 +28,9 @@ p=ggplot(data=data.fgm,aes(x=ind,y=FGM))+geom_point(aes(text=paste('Name:',PLAYE
 gg <- ggplotly(p)
 gg
 ```
-
+  
 # FTM - Free Throws Made
-```{r}
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
 playerstatsData$FTM=as.numeric(playerstatsData$FTM)
 data.ftm=playerstatsData[order(playerstatsData$FTM),c('PLAYER_NAME','TEAM_ABBREVIATION','FTM')]
 ind=seq(1:dim(data.ftm)[1])
@@ -44,10 +42,10 @@ p=ggplot(data=data.ftm,aes(x=ind,y=FTM))+geom_point(aes(text=paste('Name:',PLAYE
 gg <- ggplotly(p)
 gg
 ```
-
+  
 
 # FTA - Free Thorws Attempted
-```{r}
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
 playerstatsData$FTA=as.numeric(playerstatsData$FTA)
 data.fta=playerstatsData[order(playerstatsData$FTA),c('PLAYER_NAME','TEAM_ABBREVIATION','FTA')]
 ind=seq(1:dim(data.fta)[1])
@@ -61,7 +59,7 @@ gg
 ```
 
 # FT% - Free Throw Percentage
-```{r}
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
 playerstatsData$FT_PCT=as.numeric(playerstatsData$FT_PCT)
 data.ftpct=playerstatsData[order(playerstatsData$FT_PCT),c('PLAYER_NAME','TEAM_ABBREVIATION','FT_PCT')]
 ind=seq(1:dim(data.ftpct)[1])
@@ -83,7 +81,7 @@ gg
 
 
 # OREB - Offensive Rebounds
-```{r}
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
 playerstatsData$OREB=as.numeric(playerstatsData$OREB)
 data.oreb=playerstatsData[order(playerstatsData$OREB),c('PLAYER_NAME','TEAM_ABBREVIATION','OREB')]
 ind=seq(1:dim(data.oreb)[1])
@@ -107,7 +105,7 @@ gg
 
 
 # DREB -Defensive Rebounds
-```{r}
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
 playerstatsData$DREB=as.numeric(playerstatsData$DREB)
 data.dreb=playerstatsData[order(playerstatsData$DREB),c('PLAYER_NAME','TEAM_ABBREVIATION','DREB')]
 ind=seq(1:dim(data.dreb)[1])
@@ -127,7 +125,7 @@ gg
 ```
 
 #REB - Rebounds
-```{r}
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
 playerstatsData$REB=as.numeric(playerstatsData$REB)
 data.reb=playerstatsData[order(playerstatsData$REB),c('PLAYER_NAME','TEAM_ABBREVIATION','REB')]
 ind=seq(1:dim(data.reb)[1])
@@ -143,7 +141,7 @@ gg
 ```
 
 # PF  - Personal Fouls
-```{r}
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
 playerstatsData$PF=as.numeric(playerstatsData$PF)
 data.pf=playerstatsData[order(playerstatsData$PF),c('PLAYER_NAME','TEAM_ABBREVIATION','PF')]
 ind=seq(1:dim(data.pf)[1])
@@ -159,9 +157,9 @@ gg
 
 
 # Scatter plot of FTA and FT%
-```{r}
-setwd("~/Desktop/project5")
-load('playerstatsData.Rdata')
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+setwd("/Users/sunxiaohan/Desktop/github/finalproject-p5-team3")
+load('Data/playerstatsData.Rdata')
 note=playerstatsData[c(107,130),]  #Deandre Jordan and DH
 
 
