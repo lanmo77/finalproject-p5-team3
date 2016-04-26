@@ -61,8 +61,8 @@ home_games <- merge(game, home_games, by.x = 'GAME_ID', by.y = 'GAME_ID')
 visitor_games <- merge(game, visitor_games, by.x = 'GAME_ID', by.y = 'GAME_ID')
 
 # Add some more columns to game data; flip score margins for games where team is visitor
-game$AGAINST <- unlist(ifelse(game$GAME_ID == home_games$GAME_ID, home_games$AGAINST, visitor_games$AGAINST))
-game$STATUS <- unlist(ifelse(game$GAME_ID == home_games$GAME_ID, home_games$STATUS, visitor_games$STATUS))
+game$AGAINST <- ifelse(is.element(game$GAME_ID, home_games$GAME_ID), home_games$AGAINST, visitor_games$AGAINST)
+game$STATUS <- ifelse(is.element(game$GAME_ID, home_games$GAME_ID), home_games$STATUS, visitor_games$STATUS)
 game$SCOREMARGIN <- ifelse(game$STATUS == 'VISITOR', game$SCOREMARGIN * -1, game$SCOREMARGIN)
 
 # Filter by free throws by player ('Jordan') with low free throw %
