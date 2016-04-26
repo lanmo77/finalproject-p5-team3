@@ -68,8 +68,8 @@ home_games <- merge(game1, home_games, by.x = 'GAME_ID', by.y = 'GAME_ID')
 visitor_games <- merge(game1, visitor_games, by.x = 'GAME_ID', by.y = 'GAME_ID')
 
 # Add some more columns to game data; flip score margins for games where team is visitor
-game1$AGAINST <- unlist(ifelse(game1$GAME_ID == home_games$GAME_ID, home_games$AGAINST, visitor_games$AGAINST))
-game1$STATUS <- unlist(ifelse(game1$GAME_ID == home_games$GAME_ID, home_games$STATUS, visitor_games$STATUS))
+game1$AGAINST <- ifelse(is.element(game1$GAME_ID, home_games$GAME_ID), home_games$AGAINST, visitor_games$AGAINST)
+game1$STATUS <- ifelse(is.element(game1$GAME_ID, home_games$GAME_ID), home_games$STATUS, visitor_games$STATUS)
 game1$SCOREMARGIN <- ifelse(game1$STATUS == 'VISITOR', game1$SCOREMARGIN * -1, game1$SCOREMARGIN)
 
 # Filter by free throws by player ('Jordan') with low free throw %
@@ -94,7 +94,7 @@ game1$VSM <- unlist(SM[match(game1$UNIQUE, SM$UNIQUE), 'VScore'])
 TWOMINS1 <- data.frame(UNIQUE = unique(game1$UNIQUE))
 TWOMINS1$AGAINST <- game1[match(TWOMINS1$UNIQUE, game1$UNIQUE), 'AGAINST']
 TWOMINS1$GAME_ID <- game1[match(TWOMINS1$UNIQUE, game1$UNIQUE), 'GAME_ID']
-# TWOMINS1$STATUS <- game1[match(TWOMINS1$UNIQUE, game1$UNIQUE), 'STATUS']
+TWOMINS1$STATUS <- game1[match(TWOMINS1$UNIQUE, game1$UNIQUE), 'STATUS']
 TWOMINS1$GROUP <- game1[match(TWOMINS1$UNIQUE, game1$UNIQUE), 'GROUP']
 TWOMINS1$NUMFT <- game1[match(TWOMINS1$UNIQUE, game1$UNIQUE), 'NUMFT']
 TWOMINS1$HACKINT <- ifelse(TWOMINS1$NUMFT == 0, FALSE, TRUE)
@@ -161,8 +161,8 @@ home_games <- merge(game2, home_games, by.x = 'GAME_ID', by.y = 'GAME_ID')
 visitor_games <- merge(game2, visitor_games, by.x = 'GAME_ID', by.y = 'GAME_ID')
 
 # Add some more columns to game data; flip score margins for games where team is visitor
-game2$AGAINST <- unlist(ifelse(game2$GAME_ID == home_games$GAME_ID, home_games$AGAINST, visitor_games$AGAINST))
-game2$STATUS <- unlist(ifelse(game2$GAME_ID == home_games$GAME_ID, home_games$STATUS, visitor_games$STATUS))
+game2$AGAINST <- ifelse(is.element(game2$GAME_ID, home_games$GAME_ID), home_games$AGAINST, visitor_games$AGAINST)
+game2$STATUS <- ifelse(is.element(game2$GAME_ID, home_games$GAME_ID), home_games$STATUS, visitor_games$STATUS)
 game2$SCOREMARGIN <- ifelse(game2$STATUS == 'VISITOR', game2$SCOREMARGIN * -1, game2$SCOREMARGIN)
 
 # Filter by free throws by player ('Jordan') with low free throw %
@@ -187,7 +187,7 @@ game2$VSM <- unlist(SM[match(game2$UNIQUE, SM$UNIQUE), 'VScore'])
 TWOMINS2 <- data.frame(UNIQUE = unique(game2$UNIQUE))
 TWOMINS2$AGAINST <- game2[match(TWOMINS2$UNIQUE, game2$UNIQUE), 'AGAINST']
 TWOMINS2$GAME_ID <- game2[match(TWOMINS2$UNIQUE, game2$UNIQUE), 'GAME_ID']
-# TWOMINS2$STATUS <- game2[match(TWOMINS2$UNIQUE, game2$UNIQUE), 'STATUS']
+TWOMINS2$STATUS <- game2[match(TWOMINS2$UNIQUE, game2$UNIQUE), 'STATUS']
 TWOMINS2$GROUP <- game2[match(TWOMINS2$UNIQUE, game2$UNIQUE), 'GROUP']
 TWOMINS2$NUMFT <- game2[match(TWOMINS2$UNIQUE, game2$UNIQUE), 'NUMFT']
 TWOMINS2$HACKINT <- ifelse(TWOMINS2$NUMFT == 0, FALSE, TRUE)
@@ -254,8 +254,8 @@ home_games <- merge(game3, home_games, by.x = 'GAME_ID', by.y = 'GAME_ID')
 visitor_games <- merge(game3, visitor_games, by.x = 'GAME_ID', by.y = 'GAME_ID')
 
 # Add some more columns to game data; flip score margins for games where team is visitor
-game3$AGAINST <- unlist(ifelse(game3$GAME_ID == home_games$GAME_ID, home_games$AGAINST, visitor_games$AGAINST))
-game3$STATUS <- unlist(ifelse(game3$GAME_ID == home_games$GAME_ID, home_games$STATUS, visitor_games$STATUS))
+game3$AGAINST <- ifelse(is.element(game3$GAME_ID, home_games$GAME_ID), home_games$AGAINST, visitor_games$AGAINST)
+game3$STATUS <- ifelse(is.element(game3$GAME_ID, home_games$GAME_ID), home_games$STATUS, visitor_games$STATUS)
 game3$SCOREMARGIN <- ifelse(game3$STATUS == 'VISITOR', game3$SCOREMARGIN * -1, game3$SCOREMARGIN)
 
 # Filter by free throws by player ('Jordan') with low free throw %
@@ -280,7 +280,7 @@ game3$VSM <- unlist(SM[match(game3$UNIQUE, SM$UNIQUE), 'VScore'])
 TWOMINS3 <- data.frame(UNIQUE = unique(game3$UNIQUE))
 TWOMINS3$AGAINST <- game3[match(TWOMINS3$UNIQUE, game3$UNIQUE), 'AGAINST']
 TWOMINS3$GAME_ID <- game3[match(TWOMINS3$UNIQUE, game3$UNIQUE), 'GAME_ID']
-# TWOMINS3$STATUS <- game3[match(TWOMINS3$UNIQUE, game3$UNIQUE), 'STATUS']
+TWOMINS3$STATUS <- game3[match(TWOMINS3$UNIQUE, game3$UNIQUE), 'STATUS']
 TWOMINS3$GROUP <- game3[match(TWOMINS3$UNIQUE, game3$UNIQUE), 'GROUP']
 TWOMINS3$NUMFT <- game3[match(TWOMINS3$UNIQUE, game3$UNIQUE), 'NUMFT']
 TWOMINS3$HACKINT <- ifelse(TWOMINS3$NUMFT == 0, FALSE, TRUE)
