@@ -4,14 +4,14 @@ library(ggplot2)
 library(lubridate)
 
 # Processing all games for a team
-load("./data/teamdata2.Rdata")
-# Remove duplicates
-teamdata2 <- teamdata2[!duplicated(teamdata3), ]
-teamdata2$WCTIMESTRING <- teamdata2$NEUTRALDESCRIPTION <- NULL
-teamdata2 <- teamdata2[-1,]
-save(teamdata2, file = "./data/teamdata2.Rdata")
+load("./data/teamdata3.Rdata")
 
 game <- teamdata3
+# Remove duplicates
+game <- game[!duplicated(game), ]
+game$WCTIMESTRING <- game$NEUTRALDESCRIPTION <- NULL
+# NOTE: Comment this line out for dataframes without null first row
+game <- game[-1,]
 game$GAME_ID = unlist(as.factor(as.character(game$GAME_ID)))
 game$EVENTNUM = unlist(as.numeric(game$EVENTNUM))
 game$EVENTMSGTYPE = unlist(as.numeric(game$EVENTMSGTYPE))
@@ -25,6 +25,16 @@ game$SCOREMARGIN = unlist(as.character(game$SCOREMARGIN))
 ## Add timestamps min:sec left AND sec into game
 game$MINSECLEFT <- ms(game$PCTIMESTRING) + minutes((4 - game$PERIOD) * 12)
 game$SECINTOGAME <- 2880 - period_to_seconds(game$MINSECLEFT)
+
+## Parse SCORES
+for(i in 1:nrow(game)) {
+  if(game$EVENTNUM[i] == 0 | game$EVENTNUM[i] == 1)
+    game$SCORE[i] <- '0 - 0'
+  else if(game$SCORE[i] == 'NULL')
+    game$SCORE[i] <- game$SCORE[i - 1]
+  game$VSCORE[i] <- as.numeric(unlist(strsplit(game$SCORE[i], ' - '))[1])
+  game$HSCORE[i] <- as.numeric(unlist(strsplit(game$SCORE[i], ' - '))[2])
+}
 
 ## Fix SCOREMARGIN
 for(i in 1:nrow(game)) {
@@ -66,25 +76,42 @@ game$NUMFT <- unlist(freethrows[match(game$UNIQUE, freethrows$UNIQUE), 'n'])
 game$NUMFT[is.na(game$NUMFT)] <- 0
 game$HACKINT <- ifelse(game$NUMFT == 0, FALSE, TRUE)
 # Get 2 min score margins
-SM <- game %>% group_by(UNIQUE) %>% summarize(Difference = last(SCOREMARGIN) - first(SCOREMARGIN))
+SM <- game %>% group_by(UNIQUE) %>% summarize(Difference = last(SCOREMARGIN) - first(SCOREMARGIN), 
+                                              HScore = last(HSCORE) - first(HSCORE), 
+                                              VScore = last(VSCORE) - first(VSCORE))
 game$SM <- unlist(SM[match(game$UNIQUE, SM$UNIQUE), 'Difference'])
-
-
-ggplot(game, aes(x = SM)) + geom_histogram(data = subset(game, HACKINT == FALSE), fill = 'red', binwidth = 1) + 
-  geom_histogram(data = subset(game, HACKINT == TRUE), fill = 'blue', binwidth = 1)
-
-
-
+game$HSM <- unlist(SM[match(game$UNIQUE, SM$UNIQUE), 'HScore'])
+game$VSM <- unlist(SM[match(game$UNIQUE, SM$UNIQUE), 'VScore'])
 
 ## Make aggregate two minute interval data frame 
 TWOMINS <- data.frame(UNIQUE = unique(game$UNIQUE))
 TWOMINS$AGAINST <- game[match(TWOMINS$UNIQUE, game$UNIQUE), 'AGAINST']
 TWOMINS$GAME_ID <- game[match(TWOMINS$UNIQUE, game$UNIQUE), 'GAME_ID']
+TWOMINS$STATUS <- game[match(TWOMINS$UNIQUE, game$UNIQUE), 'STATUS']
 TWOMINS$GROUP <- game[match(TWOMINS$UNIQUE, game$UNIQUE), 'GROUP']
 TWOMINS$NUMFT <- game[match(TWOMINS$UNIQUE, game$UNIQUE), 'NUMFT']
 TWOMINS$HACKINT <- ifelse(TWOMINS$NUMFT == 0, FALSE, TRUE)
 TWOMINS$SM <- game[match(TWOMINS$UNIQUE, game$UNIQUE), 'SM']
+TWOMINS$HSM <- game[match(TWOMINS$UNIQUE, game$UNIQUE), 'HSM']
+TWOMINS$VSM <- game[match(TWOMINS$UNIQUE, game$UNIQUE), 'VSM']
 save(TWOMINS, file = "./data/PistonsTwoMinIntervals.RData")
+
+ggplot(TWOMINS, aes(SM, fill = HACKINT, group = HACKINT)) + 
+  geom_histogram(binwidth = 1, position = 'identity') +
+  labs(title = 'Pistons 2014 - 2015 (Drummond)', x = 'Two Minute Score Margin', y = 'Frequency')
+
+ggplot(TWOMINS, aes(HACKINT, SM)) + 
+  geom_boxplot(aes(fill = factor(HACKINT))) + 
+  coord_flip() + 
+  theme(legend.position="none") + 
+  labs(title = 'Pistons 2014 - 2015 (Drummond)', x = 'Are they getting hacked?', y = 'Two Minute Score Margin')
+
+summary(subset(TWOMINS, HACKINT == TRUE)$SM)
+summary(subset(TWOMINS, HACKINT == FALSE)$SM)
+
+
+
+
 
 
 '''
@@ -95,7 +122,6 @@ counts <- rbind(filter(home_games, EVENTMSGACTIONTYPE == 28 & VISITORDESCRIPTION
 filter(visitor_games, EVENTMSGACTIONTYPE == 28 & HOMEDESCRIPTION != 'NULL') %>% count(UNIQUE))
 game$NUMFOULS <- unlist(counts[match(game$UNIQUE, counts$UNIQUE), "n"])
 game$NUMFOULS[is.na(game$NUMFOULS)] <- 0
-
 
 temp <- FOULS %>% group_by(GAME_ID) %>% summarise('75'=quantile(COUNT, 0.90))
 FOULS$CUTOFF <- temp[match(FOULS$GAME_ID, temp$GAME_ID), '75']
