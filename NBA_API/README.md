@@ -1,4 +1,4 @@
-# Introduction
+# Instruction
 This R file is written for downloading data from NBA stats API. Before using the function, you need to install the following packages in R:
 install.package(rjson)
 install.package(RCurl)
