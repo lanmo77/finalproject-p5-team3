@@ -257,7 +257,8 @@ t_plot$HACKINT[t_plot$HACKINT == FALSE] = "No Hack"
 a = ggplot(all_df, aes(SM, fill = HACKINT)) + 
   geom_histogram(binwidth = 1, position = 'identity') +
   theme(legend.position="none")+
-  labs( x = 'Two Minute Score Margin', y = 'Frequency')
+  labs( x = 'Two Minute Score Margin', y = 'Frequency') +
+  scale_fill_manual(values = c("#CC6666", "#9999CC"))
 
 hack = subset(all_df, HACKINT == TRUE)$SM
 no_hack  = subset(all_df, HACKINT == FALSE)$SM
@@ -273,7 +274,8 @@ b = ggplot(t_plot, aes(HACKINT, SM)) +
   labs( y = 'Two Minute Score Margin')+
   annotate("text",x = 1.45,y = hack_mean-0.5,label = paste("mean:",hack_mean))+
   annotate("text",x = 2.45,y = no_hack_mean-0.5,label = paste("mean:",no_hack_mean))+ 
-  theme(axis.title.y = element_blank())
+  theme(axis.title.y = element_blank()) +
+  scale_fill_manual(values = c("#9999CC", "#CC6666"))
 
 #summary(subset(TWOMINS1, HACKINT == TRUE)$SM)
 #summary(subset(TWOMINS1, HACKINT == FALSE)$SM)
@@ -489,7 +491,8 @@ t_plot$HACKINT[t_plot$HACKINT == FALSE] = "No Hack"
 a = ggplot(TWOMINS1, aes(SM, fill = HACKINT)) + 
   geom_histogram(binwidth = 1, position = 'identity') +
   theme(legend.position="none")+
-  labs(x = 'Two Minute Score Margin', y = 'Frequency')
+  labs(x = 'Two Minute Score Margin', y = 'Frequency')+
+  scale_fill_manual(values = c("#CC6666", "#9999CC"))
 
 hack = subset(TWOMINS1, HACKINT == TRUE)$SM
 no_hack  = subset(TWOMINS1, HACKINT == FALSE)$SM
@@ -505,7 +508,8 @@ b = ggplot(t_plot, aes(HACKINT, SM)) +
   labs( y = 'Two Minute Score Margin')+
   annotate("text",x = 1.45,y = hack_mean-0.5,label = paste("mean:",hack_mean))+
   annotate("text",x = 2.45,y = no_hack_mean-0.5,label = paste("mean:",no_hack_mean))+ 
-  theme(axis.title.y = element_blank())
+  theme(axis.title.y = element_blank())+
+  scale_fill_manual(values = c("#9999CC", "#CC6666"))
 
 #summary(subset(TWOMINS1, HACKINT == TRUE)$SM)
 #summary(subset(TWOMINS1, HACKINT == FALSE)$SM)
@@ -629,7 +633,8 @@ t_plot$HACKINT[t_plot$HACKINT == FALSE] = "No Hack"
 a = ggplot(TWOMINS2, aes(SM, fill = HACKINT)) + 
   geom_histogram(binwidth = 1, position = 'identity') +
   theme(legend.position="none")+
-  labs(x = 'Two Minute Score Margin', y = 'Frequency')
+  labs(x = 'Two Minute Score Margin', y = 'Frequency')+
+  scale_fill_manual(values = c("#CC6666", "#9999CC"))
 
 hack = subset(TWOMINS2, HACKINT == TRUE)$SM
 no_hack  = subset(TWOMINS2, HACKINT == FALSE)$SM
@@ -645,7 +650,8 @@ b = ggplot(t_plot, aes(HACKINT, SM)) +
   labs( y = 'Two Minute Score Margin')+
   annotate("text",x = 1.45,y = hack_mean-0.5,label = paste("mean:",hack_mean))+
   annotate("text",x = 2.45,y = no_hack_mean-0.5,label = paste("mean:",no_hack_mean))+ 
-  theme(axis.title.y = element_blank())
+  theme(axis.title.y = element_blank())+
+  scale_fill_manual(values = c("#9999CC", "#CC6666"))
 
 #summary(subset(TWOMINS1, HACKINT == TRUE)$SM)
 #summary(subset(TWOMINS1, HACKINT == FALSE)$SM)
@@ -760,7 +766,8 @@ t_plot$HACKINT[t_plot$HACKINT == FALSE] = "No Hack"
 a = ggplot(TWOMINS3, aes(SM, fill = HACKINT)) + 
   geom_histogram(binwidth = 1, position = 'identity') +
   theme(legend.position="none")+
-  labs(x = 'Two Minute Score Margin', y = 'Frequency')
+  labs(x = 'Two Minute Score Margin', y = 'Frequency')+
+  scale_fill_manual(values = c("#CC6666", "#9999CC"))
 
 hack = subset(TWOMINS3, HACKINT == TRUE)$SM
 no_hack  = subset(TWOMINS3, HACKINT == FALSE)$SM
@@ -776,7 +783,8 @@ b = ggplot(t_plot, aes(HACKINT, SM)) +
   labs( y = 'Two Minute Score Margin')+
   annotate("text",x = 1.45,y = hack_mean-0.5,label = paste("mean:",hack_mean))+
   annotate("text",x = 2.45,y = no_hack_mean-0.5,label = paste("mean:",no_hack_mean))+ 
-  theme(axis.title.y = element_blank())
+  theme(axis.title.y = element_blank())+
+  scale_fill_manual(values = c("#9999CC", "#CC6666"))
 
 #summary(subset(TWOMINS1, HACKINT == TRUE)$SM)
 #summary(subset(TWOMINS1, HACKINT == FALSE)$SM)
