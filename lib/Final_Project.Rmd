@@ -263,6 +263,12 @@ b = ggplot(t_plot, aes(HACKINT, SM)) +
 ttest_all = t.test(hack,no_hack)
 print(ttest_all)
 ```
+###t-test results
+* t: 3.5334
+* p-value: 0.0004412
+* degrees of freedom: 612.07
+* 95% Confidence Intervals: 0.2365976 0.8286634
+
 
 <br><br>
 <br><br>
@@ -316,6 +322,11 @@ ttest_la = t.test(hack,no_hack)
 print(ttest_la)
 
 ```
+###t-test results
+* t: 1.8756
+* p-value: 0.06211
+* degrees of freedom: 209.19
+* 95% Confidence Intervals:  -0.0241699  0.9705684
 
 <br><br>
 <br><br>
@@ -369,6 +380,11 @@ ttest_det = t.test(hack,no_hack)
 print(ttest_det)
 
 ```
+###t-test results
+* t: 2.4296
+* p-value: 0.01591
+* degrees of freedom: 222.17
+* 95% Confidence Intervals:  0.1125442 1.0791765
 
 <br><br>
 <br><br>
@@ -423,6 +439,12 @@ ttest_hou = t.test(hack,no_hack)
 print(ttest_hou)
 
 ```
+###t-test results
+* t: 1.7703
+* p-value: 0.07836
+* degrees of freedom: 181.21
+* 95% Confidence Intervals: -0.05876789  1.08453459
+
 
 
 
