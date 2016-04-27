@@ -30,11 +30,11 @@ teamdata=readRDS("teamdata.RDS")
 teamdata2=readRDS("teamdata2.RDS")
 teamdata3=readRDS("teamdata3.RDS")
 load("ClippersTwoMinIntervals.Rdata")
-CHACKRAW=TWOMINS
+CHACKRAW=TWOMINS1
 load("RocketsTwoMinIntervals.Rdata")
-HHACKRAW=TWOMINS
+HHACKRAW=TWOMINS2
 load("PistonsTwoMinIntervals.Rdata")
-PHACKRAW=TWOMINS
+PHACKRAW=TWOMINS3
 CHACK=filter(CHACKRAW, NUMFT>0)
 HHACK=filter(HHACKRAW, NUMFT>0)
 PHACK=filter(PHACKRAW, NUMFT>0)
@@ -218,7 +218,7 @@ names1=c("LAC", "LAC_O", "HOU", "HOU_O", "DET", "DET_O")
 REGPACE=bind_cols(as.data.frame(Pace1),as.data.frame(names1))
 
 #Pace in regular time
-ggplot(REGPACE, aes(x = factor(names1),y = Pace1)) + geom_bar(aes(fill = names1),stat = "identity") + geom_text(aes(label = Pace1, y = Pace1), size = 5)+xlab("Team's name")+ylab("Pace measured by score per min")
+ggplot(REGPACE, aes(x = factor(names1),y = Pace1, fill = names1)) + geom_bar(stat = "identity") + geom_text(aes(label = Pace1, y = Pace1), size = 5)+xlab("Team's name")+ylab("Pace measured by score per min")+scale_fill_manual(values =  c("#009E73","#66FFCC","#CC0033","#CC9999","#0072B2","#99CCFF"))
 
 
 Pace_Hack=round(c(REGPPM_C, HPPM_C,REGPPM_CO, HPPM_CO, REGPPM_H, HPPM_H, REGPPM_HO, HPPM_HO, REGPPM_D, HPPM_D, REGPPM_DO, HPPM_DO), digits= 3)
@@ -227,7 +227,7 @@ names2=c("LAC","LAC_H", "LAC_O","LAC_O_H", "HOU","HOU_H", "HOU_O","HOU_O_H", "DE
 HACK_PACE=bind_cols(as.data.frame(Pace_Hack),as.data.frame(names2))
 
 #Pace in Hack time
-ggplot(HACK_PACE, aes(x = factor(names2),y = Pace_Hack)) + geom_bar(aes(fill = names2),stat = "identity") + geom_text(aes(label = Pace_Hack, y = Pace_Hack), size = 5)+xlab("Team's name")+ylab("Pace measured by score per min")
+ggplot(HACK_PACE, aes(x = factor(names2),y = Pace_Hack)) + geom_bar(aes(fill = names2),stat = "identity") + geom_text(aes(label = Pace_Hack, y = Pace_Hack), size = 5)+xlab("Team's name")+ylab("Pace measured by score per min")+scale_fill_manual(values =  c("#009E73","#009E73","#66FFCC","#66FFCC","#CC0033","#CC0033","#CC9999","#CC9999","#0072B2","#0072B2","#99CCFF","#99CCFF"))
 
 
 
@@ -435,7 +435,9 @@ lib3=c("Duncan Average", "Against Clippers","Against Rockets", "Against Pistons"
 tim_per=bind_cols(as.data.frame(duncan),as.data.frame(lib3))
 
 #Tim Duncan shooting percentage
-ggplot(tim_per, aes(x = factor(lib3),y = duncan)) + geom_bar(aes(fill = lib3),stat = "identity") + geom_text(aes(label = duncan, y = duncan), size = 5)+xlab("Tim Duncan")+ylab("Shooting percentage")
+ggplot(tim_per, aes(x = factor(lib3),y = duncan,fill=lib3)) + geom_bar(stat = "identity") + geom_text(aes(label = duncan, y = duncan), size = 5)+xlab("Tim Duncan")+ylab("Shooting percentage")+
+  scale_fill_manual(values =  c("#0072B2","#009E73","#CC0033",'grey'))
+ 
 
 ```
 
@@ -587,16 +589,20 @@ lib1=c("LAC", "HOU","DET")
 wins=bind_cols(as.data.frame(Win_total),as.data.frame(lib1))
 
 #Wining percent in the whole season
-ggplot(wins, aes(x = factor(lib1),y = Win_total)) + geom_bar(aes(fill = lib1),stat = "identity") + geom_text(aes(label = Win_total, y = Win_total), size = 5)+xlab("Team")+ylab("Regular Winning percentage")
+ggplot(wins, aes(x = factor(lib1),y = Win_total,fill = lib1)) + geom_bar(stat = "identity") + geom_text(aes(label = Win_total, y = Win_total), size = 5)+xlab("Team")+ylab("Regular Winning percentage")+scale_fill_manual(values =  c("#009E73","#CC0033","#0072B2"))
+
+
+
 
 #Games be hacked
+
 GamesHack=round(c(Cwin_per, CHwin_per, Rwin_per, RHwin_per, Dwin_per, DHwin_per), digits= 3)
 
 lib2=c("LAC_win_per", "LAC_Hack_win_per", "HOU_win_per","HOU_Hack_win_per", "DET_win_per", "DET_Hack_win_per")
 hwins=bind_cols(as.data.frame(GamesHack),as.data.frame(lib2))
 
 #Wining percent in the hacked game
-ggplot(hwins, aes(x = factor(lib2),y = GamesHack)) + geom_bar(aes(fill = lib2),stat = "identity") + geom_text(aes(label = GamesHack, y = GamesHack), size = 5)+xlab("Team")+ylab("Winning percentage compare with hack")
+ggplot(hwins, aes(x = factor(lib2),y = GamesHack, fill=lib2)) + geom_bar(stat = "identity") + geom_text(aes(label = GamesHack, y = GamesHack), size = 5)+xlab("Team")+ylab("Winning percentage compare with hack")+scale_fill_manual(values =  c("#009E73","#009E73","#CC0033","#CC0033", "#0072B2","#0072B2"))
 
 
 
