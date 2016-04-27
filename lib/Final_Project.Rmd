@@ -94,12 +94,13 @@ all_df = rbind(TWOMINS1,TWOMINS2,TWOMINS3)
 <br><br>
 <br><br>
 
-# So, the Big Question: Does Hack-A-Shaq work?
-## Goal 1: Targeting "bad" free throwers
+# So... let's find these "hacks"!
+
+### Can you tell where the "hacks" are happening?
 
 <div style="text-align: center;" align = "center">
   <span class="slide" style="float:center;width: 80%;">
-  <IMG SRC="../figs/Jordan FT.png" float = "center" ALT="image" width="800">
+  <IMG SRC="../figs/spurs-clippers.png" float = "center" ALT="image" width="800">
   </span>
 </div>
 
@@ -108,12 +109,22 @@ all_df = rbind(TWOMINS1,TWOMINS2,TWOMINS3)
 <br><br>
 <br><br>
 
-### ...But how do we define bad?
+## Goal 1: Targeting "bad" free throwers
+
+<div style="text-align: center;" align = "center">
+  <span class="slide" style="float:center;width: 80%;">
+  <IMG SRC="../figs/Jordan FT.png" float = "center" ALT="image" width="800">
+  </span>
+</div>
+
+### ... But how do we define bad?
 
 <br><br>
 <br><br>
+<br><br>
+<br><br>
 
-#### Exploring a scatter plot of Free Throw Attempts (FTA) and Free Throw Percentages (FT%)
+<center> <h3> Free Throw Attempts (FTA) vs Free Throw Percentages (FT%) </h3> </center>
 
 ```{r,results='asis',tidy=FALSE, echo=FALSE, fig.align='center', message=FALSE, warning=FALSE}
 setwd("~/Google Drive/2016 Spring/Applied Data Science/Project 5/finalproject-p5-team3")
@@ -182,7 +193,7 @@ plot_ly(playerstatsData,x = FT_PCT, y =FTA ,
 <br><br>
 <br><br>
 
-### And the performance of their infamously bad free throwers during the 2014-2015 season
+### And the performance of their infamously bad free throwers last season:
 
 <div style="text-align: center;">
 
@@ -212,20 +223,30 @@ plot_ly(playerstatsData,x = FT_PCT, y =FTA ,
   </span>
 </div>
 
-<br><br>
-<br><br>
-
-#### ... in which 493 two-minute intervals were identified as "hacking""
-#### ... and 5165 two-minute intervals that were identified as not "hacking""
+#### ... 493 two-minute intervals were identified as "hacking"
+#### ... and 5165 two-minute intervals that were identified as not "hacking"
 
 <br><br>
 <br><br>
 <br><br>
 <br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
 
-# AGGREGATE FINDINGS
+# So, the Big Question: Does Hack-A-Shaq work?
 
-## Two-Minute Score Margins
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+## Two-Minute Score Margins (Aggregate)
 
 ```{r,results='asis',tidy=FALSE, echo=FALSE, fig.align='center'}
 
@@ -256,7 +277,7 @@ b = ggplot(t_plot, aes(HACKINT, SM)) +
 
 #summary(subset(TWOMINS1, HACKINT == TRUE)$SM)
 #summary(subset(TWOMINS1, HACKINT == FALSE)$SM)
-  MainTitle = "2015 Regular Season Games - Jordan,Drummond,Howard,Rice"
+  MainTitle = "2015 Regular Season Games - Jordan, Drummond, Howard, Smith"
   grid.newpage()
   pushViewport(viewport(layout = grid.layout(2, 2, heights = unit(c(0.5, 5), "null"))))
   grid.text(MainTitle, vp = viewport(layout.pos.row = 1, layout.pos.col = 1:2))
@@ -415,6 +436,8 @@ REGPPM_D=(sum(PHACKRAW_h$HSM)+sum(PHACKRAW_v$VSM))/((length(PHACKRAW_h$HSM)*2)+(
 #Pistons Opponent Score per min
 REGPPM_DO=(sum(PHACKRAW_h$VSM)+sum(PHACKRAW_v$HSM))/((length(PHACKRAW_h$VSM)*2)+(length(PHACKRAW_v$HSM)*2));REGPPM_DO
 ```
+<br><br>
+<br><br>
 
 ## Average Pace of the Game per Minute 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.align='center'}
@@ -427,6 +450,9 @@ REGPACE=bind_cols(as.data.frame(Pace1),as.data.frame(names1))
 #Pace in regular time
 ggplot(REGPACE, aes(x = factor(names1),y = Pace1, fill = names1)) + geom_bar(stat = "identity") + geom_text(aes(label = Pace1, y = Pace1), size = 5)+xlab("Team's name")+ylab("Pace measured by score per min")+scale_fill_manual(values =  c("#009E73","#66FFCC","#CC0033","#CC9999","#0072B2","#99CCFF"))
 ```
+
+<br><br>
+<br><br>
 
 ## Average Pace During "Hack" vs non-"Hack" Periods
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.align='center'}
@@ -445,12 +471,14 @@ ggplot(HACK_PACE, aes(x = factor(names2),y = Pace_Hack)) + geom_bar(aes(fill = n
 <br><br>
 <br><br>
 
-# LOS ANGELES CLIPPERS
+<center> <h1> LOS ANGELES CLIPPERS </h1> </center>
+
+<br><br>
 
 ## Two-Minute Score Margins
 
-* 169 
-* 1717
+* 169 two-minute intervals were identified as "hacking""
+* 1717 two-minute intervals were identified as not "hacking""
 
 ```{r,results='asis',tidy=FALSE, echo=FALSE, fig.align='center',message=FALSE,warning=FALSE}
 
@@ -583,13 +611,14 @@ E(net3)$length=links3$weight*10
 <br><br>
 <br><br>
 
+<center> <h1> DETROIT PISTONS </h1> </center>
 
-# DETROIT PISTONS
+<br><br>
 
 ## Two-Minute Score Margins
 
-* 154
-* 1732
+* 154 two-minute intervals were identified as "hacking""
+* 1732 two-minute intervals were identified as not "hacking""
 
 ```{r,results='asis',tidy=FALSE, echo=FALSE, fig.align='center'}
 
@@ -713,12 +742,14 @@ E(net1)$length=links1$weight*10
 <br><br>
 <br><br>
 
-# HOUSTON ROCKETS
+<center> <h1> HOUSTON ROCKETS </h1> </center>
+
+<br><br>
 
 ## Two-Minute Score Margins
 
-* 170
-* 1716
+* 170 two-minute intervals were identified as "hacking""
+* 1716 two-minute intervals were identified as not "hacking""
 
 ```{r,results='asis',tidy=FALSE, echo=FALSE, fig.align='center'}
 
@@ -838,7 +869,8 @@ E(net2)$length=links2$weight*10
 <br><br>
 <br><br>
 
-# What if we sub the player out?
+# An optimist coach might say, "Let's sub the player out!"
+## ... Is subbing out those bad free throwers worth it?
 
 ```{r, , echo=FALSE}
 
@@ -870,7 +902,7 @@ trial.table5 <- as.table(trial5);trial.table5
 <br><br>
 <br><br>
 
-# Does "hacking" help the using team's key players?
+# Does "hacking" benefit the using team's key players?
 
 ```{r, echo=FALSE, results="hide", warning=FALSE, message=FALSE}
 #Tim Duncan play againest Clippers
@@ -1029,11 +1061,9 @@ Nduncan_made=sum(duncan_made1)+sum(duncan_made2)+sum(duncan_made3)+sum(duncan_ma
 D_duncan_per=Nduncan_made/(Nduncan_made+Nduncan_miss);D_duncan_per
 
 ```
-<br><br>
-<br><br>
 
-## San Antonio Spurs' Tim Duncan sure thinks so!
-### (During "hack" periods... )
+## ... San Antonio Spurs' Tim Duncan sure thinks so!
+<center> <h3> (During Hack Periods) </h3> </center>
 
 ```{r, echo=FALSE, fig.align='center'}
 duncan_reg=0.513
@@ -1055,7 +1085,7 @@ ggplot(tim_per, aes(x = factor(lib3),y = duncan,fill=lib3)) + geom_bar(stat = "i
 <br><br>
 <br><br>
 
-# So finally... does "hacking" bring in wins?
+# So finally... Does "hacking" bring in wins?
 
 ```{r, echo=FALSE, results="hide", warning=FALSE, message=FALSE}
 #Clippers home result
@@ -1195,10 +1225,10 @@ lib1=c("LAC", "HOU","DET")
 wins=bind_cols(as.data.frame(Win_total),as.data.frame(lib1))
 
 #Wining percent in the whole season
-ggplot(wins, aes(x = factor(lib1),y = Win_total,fill = lib1)) + geom_bar(stat = "identity") + geom_text(aes(label = Win_total, y = Win_total), size = 5)+xlab("Team")+ylab("Regular Winning percentage")+scale_fill_manual(values =  c("#009E73","#CC0033","#0072B2"))
+# ggplot(wins, aes(x = factor(lib1),y = Win_total,fill = lib1)) + geom_bar(stat = "identity") + geom_text(aes(label = Win_total, y = Win_total), size = 5)+xlab("Team")+ylab("Regular Winning percentage")+scale_fill_manual(values =  c("#009E73","#CC0033","#0072B2"))
 ```
 
-## Hacked Games vs Regular Games
+<center> <h2> Hacked Games vs Regular Games </h2> </center>
 ```{r, echo=FALSE, results="hide", warning=FALSE, message=FALSE}
 
 #Games be hacked
@@ -1217,10 +1247,8 @@ ggplot(hwins, aes(x = factor(lib2),y = GamesHack, fill=lib2)) + geom_bar(stat = 
 
 <br><br>
 <br><br>
-<br><br>
-<br><br>
 
-# Can hacking ever guarantee a win?
+## Can hacking *ever* guarantee a win?
 ```{r, echo=FALSE, results="hide", warning=FALSE, message=FALSE}
 # Define last 2 min(2:18-1:45)(no need Hack)
 #home
@@ -1439,15 +1467,38 @@ trial.table <- as.table(trial);trial.table
 
 ```
 
-#Conclusion
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
 
-## NBA API
+# Conclusion
+
+## Do we recommend Hack-a-Shaq?
+Honestly, no. 
+
+* The greatest piece of evidence comes from the win percentages, but all of our tests have shown that there is no significant difference in the results of "hacking" periods and non-"hacking" periods. Wins are wins, and good players are good players.
+* One theory common throughout the sports community is that the centers who get "hacked", such as Jordan and Howard, are just too good at what they're good at. How much they contribute to the game while they're on the court actually overshadows the missed free throws - we now have proof of this from examining the points per 100 rounds. 
+* Morale: Intentionally fouling players that are bad at free throws has gotten a lot of bad press from both players, coaches, news casters, and basketball fans in general. A lot of people argue that it's not in the spirit of the game to exploit such a weakness. Shaq himself has been known to say, "C'mon. Let's play ball, not strategy." For basketball (and NBA) the business, why not hack-a-shaq? But for basketball the game, hack-a-shaq ruins the fun.
+* Business: Maybe Hack-a-Shaq can win a game every once in a while, but there are greater hidden costs that most people don't realize. The more fouls and free throws in a game, the longer a game drags on. TV networks and advertisers end up having to change their programmed scheduling, and this costs big $$. 
+
+### You don't want to be this guy.
+
+<div style="text-align: center;" align = "center">
+  <span class="slide" style="float:center;width: 80%;">
+  <IMG SRC="../figs/popovich.jpg" float = "center" ALT="image" width="800">
+  </span>
+</div>
+
+<br><br>
+<br><br>
+
+## And finally... NBA API
+We have provided for everyone an easy, accessible, and convenient way to scrape the NBA API for future projects. Find our scraping code on our project page: <https://github.com/TZstatsADS/finalproject-p5-team3/tree/master/NBA_API> Enjoy!
+
 <span style="float:middle;width: 30%;">
   <IMG SRC="../figs/API.png" float = "right" ALT="image">
   </span>
-
-<https://github.com/TZstatsADS/finalproject-p5-team3/tree/master/NBA_API>
     
-
-## Do we recommend Hack-a-Shaq?
-Nah
