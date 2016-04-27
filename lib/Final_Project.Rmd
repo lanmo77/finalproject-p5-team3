@@ -1,6 +1,8 @@
 ---
 title: "Final Presentation"
-output: html_document
+output:
+  html_document:
+    css: styles.css
 ---
 
 #Introduction to Hack-a-Shaq
@@ -12,19 +14,49 @@ output: html_document
 <iframe width="640" height="480" align = "center" src="https://www.youtube.com/embed/-S_soY5Jg_Q" frameborder="0" allowfullscreen></iframe>
 
 </div>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
 
 ##Why Hack-a-Shaq....
-###or a-Joran, or a-Smith, or a-Howard?
+###or a-Jordan, or a-Drummond, or a-Howard?
+<div style="text-align: center;" align = "center">
+  <span class="slide" style="float:center;width: 80%;">
+  <IMG SRC="../figs/Three.png" float = "center" ALT="image" width="800">
+  </span>
+</div>
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+
+#What do they have in common?
 
 <div style="text-align: center;" align = "center">
-
 <iframe width="640" height="360" src="https://www.youtube.com/embed/YwYXAzsTsdw" frameborder="0" allowfullscreen></iframe>
 </div>
-#19.690 million USD
+
+<br><br>
+<br><br>
+<br><br>
+
+##How much do they make?
+
+
+###19.690 million USD
 Thats 19.57million more than an average data scientist makes per year!
 
-```{r setup, include=FALSE}
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
 setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
+library(dplyr)
+library(grid)
+library(gridExtra)
+
 # library(ggplot2)
 # load("income.Rdata")
 # 
@@ -43,14 +75,114 @@ load("data/ClippersTwoMinIntervals.RData")
 load("data/PistonsTwoMinIntervals.RData")
 load("data/RocketsTwoMinIntervals.RData")
 
+all_df = rbind(TWOMINS1,TWOMINS2,TWOMINS3)
+
+```
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+
+#In the News
+<IMG SRC="../figs/News.jpg" float = "center" ALT="image">
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+
+#Overall Question: Does Hack-A-Shaq work?
+
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+library(ggplot2)
+library(plotly)
+#setwd("/Users/sunxiaohan/Desktop/github/finalproject-p5-team3")
+setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
+load('Data/playerstatsData.Rdata')
+
+#Tow special case
+dj=playerstatsData[107,]  #Deandre Jordan
+dh=playerstatsData[130,] # Dwight Howard
+```
+
+
+  
+  
+#But how do we define bad?
+
+
+#NEED TO ADD 2 Other Player
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+playerstatsData$FT_PCT=as.numeric(playerstatsData$FT_PCT)
+data.ftpct=playerstatsData[order(playerstatsData$FT_PCT),c('PLAYER_NAME','TEAM_ABBREVIATION','FT_PCT')]
+ind=seq(1:dim(data.ftpct)[1])
+data.ftpct['ind']=ind
+#data.ftpct[31,]
+#data.ftpct[63,]
+
+p=ggplot(data=data.ftpct,aes(x=ind,y=FT_PCT))+geom_point(aes(text=paste('Name:',PLAYER_NAME)))+ggtitle('Overall Distribution of FT_PCT')+ylab('FT_PCT')+
+  geom_point(x=data.ftpct[31,'ind'],y=data.ftpct[31,'FT_PCT'],color='red')+
+  #geom_text(x=data.ftpct[31,'ind']+30,y=data.ftpct[31,'FT_PCT']-10,label=data.ftpct$PLAYER_NAME[31],color='red',size=0.2)+
+  geom_point(x=data.ftpct[63,'ind'],y=data.ftpct[63,'FT_PCT'],color='blue') +
+  coord_flip()
+  
+  #+
+  #geom_text(x=data.ftpct[63,'ind']+30,y=data.ftpct[63,'PT_PCT']-10,label=data.ftpct$PLAYER_NAME[63],color='blue')
+  
+gg <- ggplotly(p)
+#gg
+
 
 ```
 
-#In the News
 
 
 
-#Question: Does Hack-A-Shaq work?
+
+
+
+
+# Scatter plot of FTA and FT%
+```{r,results='asis',tidy=FALSE, echo=FALSE, fig.align='center', warning=FALSE}
+#setwd("/Users/sunxiaohan/Desktop/github/finalproject-p5-team3")
+setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
+
+load('Data/playerstatsData.Rdata')
+note=playerstatsData[c(107,130),]  #Deandre Jordan and DH
+
+
+a=list()
+for (i in 1:2){
+  m=note[i,]
+  a[[i]]=list(
+    x=m$FT_PCT,
+    y=m$FTA,
+    text=m$PLAYER_NAME,
+    xref = "x",
+    yref = "y",
+    showarrow = TRUE,
+    arrowhead = 7,
+    ax = 20,
+    ay = -40
+  )
+}
+
+plot_ly(x = playerstatsData$FT_PCT, y =playerstatsData$FTA , text=paste('Name:',playerstatsData$PLAYER_NAME),
+        mode = "markers", color = playerstatsData$FT_PCT)%>%layout(annotations = a)
+
+
+
+```
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+
+#How did we determine Hack Games?
 
 <div style="text-align: center;">
 
@@ -64,5 +196,242 @@ load("data/RocketsTwoMinIntervals.RData")
   <IMG SRC="../figs/Rockets_Dist.png" float = "center" ALT="image">
 
 </div>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
 
-<script type="text/javascript"src="//www.google.com/trends/embed.js?hl=en-US&q=Hack+a+Shaq,+Hack+a+Jordan,+Hack-a-Shaq,+Hack+NBA&cmpt=q&tz=Etc/GMT%2B4&tz=Etc/GMT%2B4&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=500&h=330"></script>
+
+#GRAPHIC OR SOMETHING THAT EXPLAINS HOW WE DIVDED UP THE QUARTERS TO LOOK AT 2MIN SCORE MARGIN - NEED QUICK EXPLAINTION/UNDERSTANDING OF THIS
+
+
+#ALL
+#### 515 2min intervals that were identified as hacking
+#### 5428 2min intervals that were identified as hacking
+
+<div style="text-align: center;">
+
+  <span style="float:left;width: 33%;">
+  <IMG SRC="../figs/LA_logo.png" float = "right" ALT="image">
+  </span>
+  
+  <span style="float:left;width: 33%;">
+  <IMG SRC="../figs/DET_logo.png" float = "right" ALT="image">
+  </span>
+  <span style="float:left;width: 33%;">
+  <IMG SRC="../figs/hou_logo.png" float = "right" ALT="image">
+  </span>
+
+</div>
+```{r,results='asis',tidy=FALSE, echo=FALSE, fig.align='center'}
+
+t_plot = all_df
+t_plot$HACKINT[t_plot$HACKINT == TRUE] = "Hack"
+t_plot$HACKINT[t_plot$HACKINT == FALSE] = "No Hack"
+
+a = ggplot(all_df, aes(SM, fill = HACKINT)) + 
+  geom_histogram(binwidth = 1, position = 'identity') +
+  theme(legend.position="none")+
+  labs( x = 'Two Minute Score Margin', y = 'Frequency')
+
+hack = subset(all_df, HACKINT == TRUE)$SM
+no_hack  = subset(all_df, HACKINT == FALSE)$SM
+no_hack_mean = round(mean(no_hack),2)
+hack_mean = round(mean(hack),2)
+#print(length(hack))
+#print(length(no_hack))
+
+b = ggplot(t_plot, aes(HACKINT, SM)) + 
+  geom_boxplot(aes(fill = factor(HACKINT))) + 
+  coord_flip() + 
+  theme(legend.position="none") + 
+  labs( y = 'Two Minute Score Margin')+
+  annotate("text",x = 1.45,y = hack_mean-0.5,label = paste("mean:",hack_mean))+
+  annotate("text",x = 2.45,y = no_hack_mean-0.5,label = paste("mean:",no_hack_mean))+ 
+  theme(axis.title.y = element_blank())
+
+#summary(subset(TWOMINS1, HACKINT == TRUE)$SM)
+#summary(subset(TWOMINS1, HACKINT == FALSE)$SM)
+  MainTitle = "2015 Regular Season Games - Jordan,Drummond,Howard,Rice"
+  grid.newpage()
+  pushViewport(viewport(layout = grid.layout(2, 2, heights = unit(c(0.5, 5), "null"))))
+  grid.text(MainTitle, vp = viewport(layout.pos.row = 1, layout.pos.col = 1:2))
+  print(a, vp = viewport(layout.pos.row = 2, layout.pos.col = 1),newpage=FALSE)
+  print(b, vp = viewport(layout.pos.row = 2, layout.pos.col = 2),newpage=FALSE)
+  popViewport(1)
+  
+ttest_all = t.test(hack,no_hack)
+print(ttest_all)
+```
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+
+
+#CLIPPERS
+#### 174 2min intervals that were identified as hacking
+#### 1800 2min intervals that were identified as hacking
+
+```{r,results='asis',tidy=FALSE, echo=FALSE, fig.align='center'}
+
+t_plot = TWOMINS1
+t_plot$HACKINT[t_plot$HACKINT == TRUE] = "Hack"
+t_plot$HACKINT[t_plot$HACKINT == FALSE] = "No Hack"
+
+a = ggplot(TWOMINS1, aes(SM, fill = HACKINT)) + 
+  geom_histogram(binwidth = 1, position = 'identity') +
+  theme(legend.position="none")+
+  labs(x = 'Two Minute Score Margin', y = 'Frequency')
+
+hack = subset(TWOMINS1, HACKINT == TRUE)$SM
+no_hack  = subset(TWOMINS1, HACKINT == FALSE)$SM
+no_hack_mean = round(mean(no_hack),2)
+hack_mean = round(mean(hack),2)
+#print(length(hack))
+#print(length(no_hack))
+
+b = ggplot(t_plot, aes(HACKINT, SM)) + 
+  geom_boxplot(aes(fill = factor(HACKINT))) + 
+  coord_flip() + 
+  theme(legend.position="none") + 
+  labs( y = 'Two Minute Score Margin')+
+  annotate("text",x = 1.45,y = hack_mean-0.5,label = paste("mean:",hack_mean))+
+  annotate("text",x = 2.45,y = no_hack_mean-0.5,label = paste("mean:",no_hack_mean))+ 
+  theme(axis.title.y = element_blank())
+
+#summary(subset(TWOMINS1, HACKINT == TRUE)$SM)
+#summary(subset(TWOMINS1, HACKINT == FALSE)$SM)
+  MainTitle = "LA Clippers 2014 - 2015 (Jordan)"
+  grid.newpage()
+  pushViewport(viewport(layout = grid.layout(2, 2, heights = unit(c(0.5, 5), "null"))))
+  grid.text(MainTitle, vp = viewport(layout.pos.row = 1, layout.pos.col = 1:2))
+  print(a, vp = viewport(layout.pos.row = 2, layout.pos.col = 1),newpage=FALSE)
+  print(b, vp = viewport(layout.pos.row = 2, layout.pos.col = 2),newpage=FALSE)
+  popViewport(1)
+  
+ttest_la = t.test(hack,no_hack)
+print(ttest_la)
+
+```
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+
+#Detroit
+
+#### 181 2min intervals that were identified as hacking
+#### 1802 2min intervals that were identified as hacking
+
+```{r,results='asis',tidy=FALSE, echo=FALSE, fig.align='center'}
+
+t_plot = TWOMINS2
+t_plot$HACKINT[t_plot$HACKINT == TRUE] = "Hack"
+t_plot$HACKINT[t_plot$HACKINT == FALSE] = "No Hack"
+
+a = ggplot(TWOMINS2, aes(SM, fill = HACKINT)) + 
+  geom_histogram(binwidth = 1, position = 'identity') +
+  theme(legend.position="none")+
+  labs(x = 'Two Minute Score Margin', y = 'Frequency')
+
+hack = subset(TWOMINS2, HACKINT == TRUE)$SM
+no_hack  = subset(TWOMINS2, HACKINT == FALSE)$SM
+no_hack_mean = round(mean(no_hack),2)
+hack_mean = round(mean(hack),2)
+#print(length(hack))
+#print(length(no_hack))
+
+b = ggplot(t_plot, aes(HACKINT, SM)) + 
+  geom_boxplot(aes(fill = factor(HACKINT))) + 
+  coord_flip() + 
+  theme(legend.position="none") + 
+  labs( y = 'Two Minute Score Margin')+
+  annotate("text",x = 1.45,y = hack_mean-0.5,label = paste("mean:",hack_mean))+
+  annotate("text",x = 2.45,y = no_hack_mean-0.5,label = paste("mean:",no_hack_mean))+ 
+  theme(axis.title.y = element_blank())
+
+#summary(subset(TWOMINS1, HACKINT == TRUE)$SM)
+#summary(subset(TWOMINS1, HACKINT == FALSE)$SM)
+  MainTitle = "Detroit Pisons 2014 - 2015 (Drummond)"
+  grid.newpage()
+  pushViewport(viewport(layout = grid.layout(2, 2, heights = unit(c(0.5, 5), "null"))))
+  grid.text(MainTitle, vp = viewport(layout.pos.row = 1, layout.pos.col = 1:2))
+  print(a, vp = viewport(layout.pos.row = 2, layout.pos.col = 1),newpage=FALSE)
+  print(b, vp = viewport(layout.pos.row = 2, layout.pos.col = 2),newpage=FALSE)
+  popViewport(1)
+  
+ttest_det = t.test(hack,no_hack)
+print(ttest_det)
+
+```
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+
+
+#Houston
+
+#### 181 2min intervals that were identified as hacking
+#### 1802 2min intervals that were identified as hacking
+
+```{r,results='asis',tidy=FALSE, echo=FALSE, fig.align='center'}
+
+t_plot = TWOMINS3
+t_plot$HACKINT[t_plot$HACKINT == TRUE] = "Hack"
+t_plot$HACKINT[t_plot$HACKINT == FALSE] = "No Hack"
+
+a = ggplot(TWOMINS3, aes(SM, fill = HACKINT)) + 
+  geom_histogram(binwidth = 1, position = 'identity') +
+  theme(legend.position="none")+
+  labs(x = 'Two Minute Score Margin', y = 'Frequency')
+
+hack = subset(TWOMINS3, HACKINT == TRUE)$SM
+no_hack  = subset(TWOMINS3, HACKINT == FALSE)$SM
+no_hack_mean = round(mean(no_hack),2)
+hack_mean = round(mean(hack),2)
+print(length(hack))
+print(length(no_hack))
+
+b = ggplot(t_plot, aes(HACKINT, SM)) + 
+  geom_boxplot(aes(fill = factor(HACKINT))) + 
+  coord_flip() + 
+  theme(legend.position="none") + 
+  labs( y = 'Two Minute Score Margin')+
+  annotate("text",x = 1.45,y = hack_mean-0.5,label = paste("mean:",hack_mean))+
+  annotate("text",x = 2.45,y = no_hack_mean-0.5,label = paste("mean:",no_hack_mean))+ 
+  theme(axis.title.y = element_blank())
+
+#summary(subset(TWOMINS1, HACKINT == TRUE)$SM)
+#summary(subset(TWOMINS1, HACKINT == FALSE)$SM)
+  MainTitle = "Houston Rockets 2014 - 2015 (Howard and Rice)"
+  grid.newpage()
+  pushViewport(viewport(layout = grid.layout(2, 2, heights = unit(c(0.5, 5), "null"))))
+  grid.text(MainTitle, vp = viewport(layout.pos.row = 1, layout.pos.col = 1:2))
+  print(a, vp = viewport(layout.pos.row = 2, layout.pos.col = 1),newpage=FALSE)
+  print(b, vp = viewport(layout.pos.row = 2, layout.pos.col = 2),newpage=FALSE)
+  popViewport(1)
+  
+ttest_hou = t.test(hack,no_hack)
+print(ttest_hou)
+
+```
+
+
+
+
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+#Conclusion
+Do we recommend Hack - A - Shaq

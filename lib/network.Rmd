@@ -12,11 +12,13 @@ library(dplyr)
 library(tidyr)
 library(RColorBrewer)
 library(igraph)
-setwd("/Users/sunxiaohan/Desktop/github/finalproject-p5-team3")
+#setwd("/Users/sunxiaohan/Desktop/github/finalproject-p5-team3")
+setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
+
 load('Data/teamDataf.Rdata')
 
 #load the data
-gamedata=readRDS('Data/Game_Summary_HAS.RDS')
+gamedata=readRDS('data/Game_Summary_HAS.RDS')
 gamedata=gamedata[,c('HTEAM_ID','HTEAM_ABBREVIATION','VTEAM_ID','VTEAM_ABBREVIATION','Hack','HAS_Count')]
 
 
