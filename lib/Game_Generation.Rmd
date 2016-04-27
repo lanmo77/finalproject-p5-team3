@@ -16,6 +16,7 @@ output: html_document
 setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
 library(dplyr)
 library(ggplot2)
+library(lubridate)
 load("teamdata.Rdata")
 process <- function(teamdata){
   teamdata$EVENTMSGTYPE = as.numeric(teamdata$EVENTMSGTYPE)
@@ -132,6 +133,10 @@ process <- function(teamdata){
   
   teamdata$hscore <- as.numeric(unlist(lapply(strsplit(teamdata$SCORE, "\\-"), "[", 1)))
   teamdata$vscore <- as.numeric(unlist(lapply(strsplit(teamdata$SCORE, "-"), "[", 2)))
+  
+  teamdata$MINSECLEFT <- ms(teamdata$PCTIMESTRING) + minutes((4 - teamdata$PERIOD) * 12)
+  teamdata$SECINTOGAME <- 2880 - period_to_seconds(teamdata$MINSECLEFT)
+  teamdata$min2r <- ceiling(teamdata$SECINTOGAME / 120)
 
 
 return(teamdata)
@@ -153,12 +158,18 @@ hack_games = function(names,teamdata){
   return (games)
 }
 
+games_fts = function(names,teamdata){
+  df_game = filter(teamdata, EVENTMSGTYPE=="3",HFreeName%in%names | VFreeName%in%names )%>%group_by(GAME_ID)%>% summarise(count = n())
+  df_game = df_game[complete.cases(df_game),]
+  return (df_game)
+}
 
 ```
 
 ```{r}
-load("teamdata.Rdata")
+load("../data/teamdata.Rdata")
 teamdata = process(teamdata)
+saveRDS(teamdata,"teamdata_pro.RDS")
 games_clippers = hack_games("jordan",teamdata)
 #ames_clippers = test1[1]
 #plot_clippers[1]
@@ -167,49 +178,93 @@ games_clippers = hack_games("jordan",teamdata)
 ```{r}
 library(png)
 library(grid)
-img <- readPNG(system.file("img", "download.png", package="png"))
-g <- rasterGrob(img, interpolate=TRUE)
+ library(gridExtra)
 
-ggplot(games_clippers, aes(x=count)) +
+lowbound = min(games_clippers$count)
+height = 15
+total_games = games_fts(c("jordan"),teamdata)
+
+
+a = ggplot(total_games, aes(x=count)) +
   geom_histogram(binwidth=.5, colour="red", fill="white") + 
-  annotation_custom(g, xmin=-0, xmax=10, ymin=0, ymax=10) +
+  geom_vline(xintercept = lowbound)+
+ annotate("text", x = lowbound + 4, y = height, label = "Hack-A-Jordan")+
+   annotate("text", x = lowbound-3, y = height, label = "No Hack")+
   ggtitle("LA Clippers - Jordan")+
-  xlab("Number of Free Throws Per Game for Poor Shooting")+
-  ylab("Number of Games")
+    xlab("Number of Free Throws Per Game")+
+    ylab("Number of Games")
+
+png("figs/Clippers_Dist.png")
+a
+dev.off()
 
 ```
 
 ```{r}
-load("teamdata2.Rdata")
+load("../data/teamdata2.Rdata")
 teamdata2 = process(teamdata2)
+saveRDS(teamdata2,"teamdata2_pro.RDS")
+
 games_rockets = hack_games(c("howard","smith"),teamdata2)
+
+
 ```
 
 ```{r}
-b = ggplot(games_rockets, aes(x=count)) +
+
+lowbound = min(games_rockets$count)
+height = max(games_rockets$count)
+
+total_games = games_fts(c("howard","smith"),teamdata2)
+
+b = ggplot(total_games, aes(x=count)) +
   geom_histogram(binwidth=.5, colour="red", fill="white") + 
+  geom_vline(xintercept = lowbound)+
+ annotate("text", x = lowbound + 4, y = 15, label = "Hack-A-Howard/Smith")+
+   annotate("text", x = lowbound-3, y = 15, label = "No Hack")+
   ggtitle("Houston Rockets - Howard and Smith")+
-  xlab("Number of Free Throws Per Game for Poor Shooting")+
+  xlab("Number of Free Throws Per Game")+
   ylab("Number of Games")
+
+
+png("figs/Rockets_Dist.png")
+b
+dev.off()
+
 ```
 
 ```{r}
-load("teamdata3.Rdata")
+load("../data/teamdata3.Rdata")
 teamdata3 = process(teamdata3)
+saveRDS(teamdata3,"teamdata3_pro.RDS")
+
 games_detriot = hack_games("drummond",teamdata3)
-c = ggplot(games_detriot, aes(x=count)) +
+```
+
+```{r}
+lowbound = min(games_detriot$count)
+height = max(games_detriot$count)
+total_games = games_fts(c("drummond"),teamdata3)
+
+c = ggplot(total_games, aes(x=count)) +
   geom_histogram(binwidth=.5, colour="red", fill="white") + 
+  geom_vline(xintercept = lowbound)+
+ annotate("text", x = lowbound + 3, y = 15, label = "Hack-A-Drummond")+
+   annotate("text", x = lowbound-2, y = 15, label = "No Hack")+
   ggtitle("Detriot Pistions - Drummond")+
-  xlab("Number of Free Throws Per Game for Poor Shooting")+
-  ylab("Number of Games")
+  xlab("Number of Free Throws Per Game")+
+  ylab("Number of Games")+
 
 
+png("figs/Pistons_Dist.png")
+c
+dev.off()
+c
 ```
 
 ```{r}
 totalgamelist = unlist(lapply((c(games_detriot,games_rockets,games_clippers)),as.character))
-data_score = read.csv("data.score.csv")
-load("data.score.Rdata")
+load("../data/data.score.Rdata")
 data_score = data.score[-1,]
 #zdata_score$GAME_ID = paste("00",data_score$GAME_ID, sep = "")
 
