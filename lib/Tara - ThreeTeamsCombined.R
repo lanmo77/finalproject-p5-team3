@@ -1,5 +1,5 @@
-#setwd("~/Google Drive/2016 Spring/Applied Data Science/Project 5/finalproject-p5-team3Tara")
-setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
+setwd("~/Google Drive/2016 Spring/Applied Data Science/Project 5/finalproject-p5-team3")
+#setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
 
 library(dplyr)
 library(ggplot2)
@@ -31,6 +31,8 @@ game1$VISITORDESCRIPTION = unlist(as.character(game1$VISITORDESCRIPTION))
 game1$SCORE = unlist(as.character(game1$SCORE))
 game1$SCOREMARGIN = unlist(as.character(game1$SCOREMARGIN))
 
+# Remove period 5 (overtime)
+game1 <- game1[!(game1$PERIOD == 5),]
 ## Add timestamps min:sec left AND sec into game
 game1$MINSECLEFT <- ms(game1$PCTIMESTRING) + minutes((4 - game1$PERIOD) * 12)
 game1$SECINTOGAME <- 2880 - period_to_seconds(game1$MINSECLEFT)
@@ -57,6 +59,8 @@ game1$SCOREMARGIN <- as.numeric(game1$SCOREMARGIN)
 # Groups set 1 to 24 for 2 minute intervals
 game1$GROUP <- ceiling(game1$SECINTOGAME / 120)
 game1$GROUP <- ifelse(game1$GROUP == 0, 1, game1$GROUP)
+# Remove last 2 minutes - cannot hack in last two minutes
+game1 <- game1[!(game1$GROUP == 24),]
 # Make unique identifier
 game1$UNIQUE <- paste(as.character(game1$GAME_ID), as.character(game1$GROUP), sep = '-')
 
@@ -124,6 +128,8 @@ game2$VISITORDESCRIPTION = unlist(as.character(game2$VISITORDESCRIPTION))
 game2$SCORE = unlist(as.character(game2$SCORE))
 game2$SCOREMARGIN = unlist(as.character(game2$SCOREMARGIN))
 
+# Remove period 5 (overtime)
+game2 <- game2[!(game2$PERIOD == 5),]
 ## Add timestamps min:sec left AND sec into game
 game2$MINSECLEFT <- ms(game2$PCTIMESTRING) + minutes((4 - game2$PERIOD) * 12)
 game2$SECINTOGAME <- 2880 - period_to_seconds(game2$MINSECLEFT)
@@ -150,6 +156,8 @@ game2$SCOREMARGIN <- as.numeric(game2$SCOREMARGIN)
 # Groups set 1 to 24 for 2 minute intervals
 game2$GROUP <- ceiling(game2$SECINTOGAME / 120)
 game2$GROUP <- ifelse(game2$GROUP == 0, 1, game2$GROUP)
+# Remove last 2 minutes - cannot hack in last two minutes
+game2 <- game2[!(game2$GROUP == 24),]
 # Make unique identifier
 game2$UNIQUE <- paste(as.character(game2$GAME_ID), as.character(game2$GROUP), sep = '-')
 
@@ -217,6 +225,8 @@ game3$VISITORDESCRIPTION = unlist(as.character(game3$VISITORDESCRIPTION))
 game3$SCORE = unlist(as.character(game3$SCORE))
 game3$SCOREMARGIN = unlist(as.character(game3$SCOREMARGIN))
 
+# Remove period 5 (overtime)
+game3 <- game3[!(game3$PERIOD == 5),]
 ## Add timestamps min:sec left AND sec into game
 game3$MINSECLEFT <- ms(game3$PCTIMESTRING) + minutes((4 - game3$PERIOD) * 12)
 game3$SECINTOGAME <- 2880 - period_to_seconds(game3$MINSECLEFT)
@@ -243,6 +253,8 @@ game3$SCOREMARGIN <- as.numeric(game3$SCOREMARGIN)
 # Groups set 1 to 24 for 2 minute intervals
 game3$GROUP <- ceiling(game3$SECINTOGAME / 120)
 game3$GROUP <- ifelse(game3$GROUP == 0, 1, game3$GROUP)
+# Remove last 2 minutes - cannot hack in last two minutes
+game3 <- game3[!(game3$GROUP == 24),]
 # Make unique identifier
 game3$UNIQUE <- paste(as.character(game3$GAME_ID), as.character(game3$GROUP), sep = '-')
 
