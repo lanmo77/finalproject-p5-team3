@@ -48,11 +48,12 @@ output:
 
 
 ###19.690 million USD
-Thats 19.57million more than an average data scientist makes per year!
+That's 19.57million more than an average data scientist makes per year!
 
 
 ```{r,echo=FALSE,message=FALSE,warning=FALSE}
-setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
+setwd("/Users/sunxiaohan/Desktop/github/finalproject-p5-team3")
+#setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
 library(dplyr)
 library(grid)
 library(gridExtra)
@@ -99,8 +100,8 @@ all_df = rbind(TWOMINS1,TWOMINS2,TWOMINS3)
 ```{r,echo=FALSE,message=FALSE,warning=FALSE}
 library(ggplot2)
 library(plotly)
-#setwd("/Users/sunxiaohan/Desktop/github/finalproject-p5-team3")
-setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
+setwd("/Users/sunxiaohan/Desktop/github/finalproject-p5-team3")
+#setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
 load('Data/playerstatsData.Rdata')
 
 #Tow special case
@@ -114,7 +115,7 @@ dh=playerstatsData[130,] # Dwight Howard
 #But how do we define bad?
 
 
-#NEED TO ADD 2 Other Player
+
 ```{r,echo=FALSE,message=FALSE,warning=FALSE}
 playerstatsData$FT_PCT=as.numeric(playerstatsData$FT_PCT)
 data.ftpct=playerstatsData[order(playerstatsData$FT_PCT),c('PLAYER_NAME','TEAM_ABBREVIATION','FT_PCT')]
@@ -147,15 +148,15 @@ gg <- ggplotly(p)
 
 # Scatter plot of FTA and FT%
 ```{r,results='asis',tidy=FALSE, echo=FALSE, fig.align='center', warning=FALSE}
-#setwd("/Users/sunxiaohan/Desktop/github/finalproject-p5-team3")
-setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
+setwd("/Users/sunxiaohan/Desktop/github/finalproject-p5-team3")
+#setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
 
 load('Data/playerstatsData.Rdata')
-note=playerstatsData[c(107,130),]  #Deandre Jordan and DH
+note=playerstatsData[c(107,130,20,259),]  #Deandre Jordan and DH
 
 
 a=list()
-for (i in 1:2){
+for (i in 1:4){
   m=note[i,]
   a[[i]]=list(
     x=m$FT_PCT,
@@ -170,7 +171,8 @@ for (i in 1:2){
   )
 }
 
-plot_ly(x = playerstatsData$FT_PCT, y =playerstatsData$FTA , text=paste('Name:',playerstatsData$PLAYER_NAME),
+plot_ly(playerstatsData,x = FT_PCT, y =FTA ,
+        text=paste('Name:',playerstatsData$PLAYER_NAME),
         mode = "markers", color = playerstatsData$FT_PCT)%>%layout(annotations = a)
 
 
@@ -263,6 +265,7 @@ b = ggplot(t_plot, aes(HACKINT, SM)) +
 ttest_all = t.test(hack,no_hack)
 print(ttest_all)
 ```
+  
 ###t-test results
 * t: 3.5334
 * p-value: 0.0004412
@@ -281,7 +284,7 @@ print(ttest_all)
 #### 174 2min intervals that were identified as hacking
 #### 1800 2min intervals that were identified as hacking
 
-```{r,results='asis',tidy=FALSE, echo=FALSE, fig.align='center'}
+```{r,results='asis',tidy=FALSE, echo=FALSE, fig.align='center',message=FALSE,warning=FALSE}
 
 t_plot = TWOMINS1
 t_plot$HACKINT[t_plot$HACKINT == TRUE] = "Hack"
@@ -318,15 +321,86 @@ b = ggplot(t_plot, aes(HACKINT, SM)) +
   print(b, vp = viewport(layout.pos.row = 2, layout.pos.col = 2),newpage=FALSE)
   popViewport(1)
   
+
+
+###########################network
+library(dplyr)
+library(tidyr)
+library(RColorBrewer)
+library(igraph)
+setwd("/Users/sunxiaohan/Desktop/github/finalproject-p5-team3")
+#setwd("/Users/bobminnich/Documents/Columbia/Courses/Applied_Data_Science/FinalProject/finalproject-p5-team3")
+
+load('Data/teamDataf.Rdata')
+
+#load the data
+gamedata=readRDS('data/Game_Summary_HAS.RDS')
+gamedata=gamedata[,c('HTEAM_ID','HTEAM_ABBREVIATION','VTEAM_ID','VTEAM_ABBREVIATION','Hack','HAS_Count')]
+
+
+
+hackdata=filter(gamedata,Hack==1)
+
+LAC=filter(hackdata,HTEAM_ABBREVIATION=='LAC'|VTEAM_ABBREVIATION=='LAC')
+LAC['OPP']=LAC$HTEAM_ABBREVIATION
+ind=(LAC$OPP=='LAC')
+LAC=as.matrix(LAC)
+LAC[ind,'OPP']=LAC[ind,'VTEAM_ABBREVIATION']
+LAC=as.data.frame(LAC)
+
+
+LAC.new=LAC[,c('HAS_Count','OPP')]
+LAC.new$HAS_Count=as.numeric(LAC.new$HAS_Count)
+
+LAC.new=aggregate(LAC.new[,1]~LAC.new[,2],data=LAC.new,FUN=mean)
+
+
+
+nodes3=as.data.frame(matrix(nrow=nrow(LAC.new)+1))
+nodes3['id']=c('LAC',as.character(LAC.new[,1]))
+nodes3=nodes3[,-1]
+
+links3=as.data.frame(matrix(nrow=nrow(LAC.new)))
+links3['from']='LAC'
+links3['to']=LAC.new$`LAC.new[, 2]`
+links3=links3[,-1]
+links3['weight']=LAC.new$`LAC.new[, 1]`
+
+
+net3 <- graph.data.frame(links3, nodes3, directed=T)
+V(net3)$size=c(10,links3$weight*8)
+
+
+
+V(net3)$color='light blue'
+
+
+# Set edge width based on weight:
+E(net3)$width <- E(net3)$weight/6
+
+#change arrow size and edge color:
+E(net3)$arrow.size <- .2
+E(net3)$edge.color <- "gray80"
+E(net3)$width <- 1+E(net3)$weight/12
+E(net3)$length=links3$weight*10
+
+plot(net3,vertex.label.family="Arial Black",main='HAS for LAC') 
+
+
+
+
+
+
+##################t test
 ttest_la = t.test(hack,no_hack)
 print(ttest_la)
-
 ```
+  
 ###t-test results
-* t: 1.8756
-* p-value: 0.06211
-* degrees of freedom: 209.19
-* 95% Confidence Intervals:  -0.0241699  0.9705684
+* t: 1.8756  
+* p-value: 0.06211  
+* degrees of freedom: 209.19  
+* 95% Confidence Intervals:  -0.0241699  0.9705684  
 
 <br><br>
 <br><br>
@@ -375,16 +449,73 @@ b = ggplot(t_plot, aes(HACKINT, SM)) +
   print(a, vp = viewport(layout.pos.row = 2, layout.pos.col = 1),newpage=FALSE)
   print(b, vp = viewport(layout.pos.row = 2, layout.pos.col = 2),newpage=FALSE)
   popViewport(1)
+
+
+
+###########network plot
+DET=filter(hackdata,HTEAM_ABBREVIATION=='DET'|VTEAM_ABBREVIATION=='DET')
+DET['OPP']=DET$HTEAM_ABBREVIATION
+ind=(DET$OPP=='DET')
+DET=as.matrix(DET)
+DET[ind,'OPP']=DET[ind,'VTEAM_ABBREVIATION']
+DET=as.data.frame(DET)
+
+
+DET.new=DET[,c('HAS_Count','OPP')]
+DET.new$HAS_Count=as.numeric(DET.new$HAS_Count)
+
+DET.new=aggregate(DET.new[,1]~DET.new[,2],data=DET.new,FUN=mean)
+
+
+
+nodes1=as.data.frame(matrix(nrow=nrow(DET.new)+1))
+nodes1=nodes1[,-1]
+nodes1['id']=c('DET',as.character(DET.new[,1]))
+nodes1['group']='LL'
+nodes1['weight']=c(100,DET.new$`DET.new[, 1]`*50)
+
+links1=as.data.frame(matrix(nrow=nrow(DET.new)))
+links1['from']='DET'
+links1['to']=DET.new$`DET.new[, 2]`
+links1=links1[,-1]
+links1['weight']=DET.new$`DET.new[, 1]`
+
+
+
+
+
+net1 <- graph.data.frame(links1, nodes1, directed=T)
+V(net1)$size=c(10,links1$weight*10)
+
+
+
+V(net1)$color='light blue'
+
+
+# Set edge width based on weight:
+E(net1)$width <- E(net1)$weight/6
+
+#change arrow size and edge color:
+E(net1)$arrow.size <- .2
+E(net1)$edge.color <- "gray80"
+E(net1)$width <- 1+E(net1)$weight/12
+E(net1)$length=links1$weight*10
+
+plot(net1,vertex.label.family="Arial Black",main='HAS for DET') 
+
+##########################t test
   
 ttest_det = t.test(hack,no_hack)
 print(ttest_det)
 
+
 ```
+  
 ###t-test results
-* t: 2.4296
-* p-value: 0.01591
-* degrees of freedom: 222.17
-* 95% Confidence Intervals:  0.1125442 1.0791765
+* t: 2.4296  
+* p-value: 0.01591  
+* degrees of freedom: 222.17  
+* 95% Confidence Intervals:  0.1125442 1.0791765  
 
 <br><br>
 <br><br>
@@ -434,19 +565,70 @@ b = ggplot(t_plot, aes(HACKINT, SM)) +
   print(a, vp = viewport(layout.pos.row = 2, layout.pos.col = 1),newpage=FALSE)
   print(b, vp = viewport(layout.pos.row = 2, layout.pos.col = 2),newpage=FALSE)
   popViewport(1)
+
+
+
+################network plot
+HOU=filter(hackdata,HTEAM_ABBREVIATION=='HOU'|VTEAM_ABBREVIATION=='HOU')
+HOU['OPP']=HOU$HTEAM_ABBREVIATION
+ind=(HOU$OPP=='HOU')
+HOU=as.matrix(HOU)
+HOU[ind,'OPP']=HOU[ind,'VTEAM_ABBREVIATION']
+HOU=as.data.frame(HOU)
+
+
+HOU.new=HOU[,c('HAS_Count','OPP')]
+HOU.new$HAS_Count=as.numeric(HOU.new$HAS_Count)
+
+HOU.new=aggregate(HOU.new[,1]~HOU.new[,2],data=HOU.new,FUN=mean)
+
+
+
+nodes2=as.data.frame(matrix(nrow=nrow(HOU.new)+1))
+nodes2['id']=c('HOU',as.character(HOU.new[,1]))
+nodes2=nodes2[,-1]
+
+links2=as.data.frame(matrix(nrow=nrow(HOU.new)))
+links2['from']='HOU'
+links2['to']=HOU.new$`HOU.new[, 2]`
+links2=links2[,-1]
+links2['weight']=HOU.new$`HOU.new[, 1]`
+
+
+net2 <- graph.data.frame(links2, nodes2, directed=T)
+V(net2)$size=c(10,links2$weight*8)
+
+
+
+V(net2)$color='light blue'
+
+
+# Set edge width based on weight:
+E(net2)$width <- E(net2)$weight/6
+
+#change arrow size and edge color:
+E(net2)$arrow.size <- .2
+E(net2)$edge.color <- "gray80"
+E(net2)$width <- 1+E(net2)$weight/12
+E(net2)$length=links2$weight*10
+
+plot(net2,vertex.label.family="Arial Black",main='HOU')
+
+
+#######################t test
   
 ttest_hou = t.test(hack,no_hack)
 print(ttest_hou)
 
+
+
 ```
+  
 ###t-test results
-* t: 1.7703
-* p-value: 0.07836
-* degrees of freedom: 181.21
-* 95% Confidence Intervals: -0.05876789  1.08453459
-
-
-
+* t: 1.7703  
+* p-value: 0.07836  
+* degrees of freedom: 181.21  
+* 95% Confidence Intervals: -0.05876789  1.08453459  
 
 
 
@@ -456,4 +638,13 @@ print(ttest_hou)
 <br><br>
 
 #Conclusion
+
+## NBA API
+<span style="float:middle;width: 30%;">
+  <IMG SRC="../figs/API.png" float = "right" ALT="image">
+  </span>
+
+<https://github.com/TZstatsADS/finalproject-p5-team3/tree/master/NBA_API>
+    
+
 Do we recommend Hack - A - Shaq
