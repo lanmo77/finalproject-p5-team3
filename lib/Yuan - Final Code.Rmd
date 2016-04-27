@@ -1,31 +1,12 @@
 Tracking the pace of using Hack team and the team be Hacked
+
 ```{r, echo=FALSE, results="hide", warning=FALSE, message=FALSE}
-setwd("C:/Users/mangmangyuzhou/Desktop/2016 Spring/data science/project 5")
+setwd("~/Google Drive/2016 Spring/Applied Data Science/Project 5/finalproject-p5-team3")
+#setwd("C:/Users/mangmangyuzhou/Desktop/2016 Spring/data science/project 5")
 library(dplyr)
 library(ggplot2)
 library(lubridate)
-# load("teamdata.Rdata")
-# load("teamdata2.Rdata")
-# load("teamdata3.Rdata")
-# teamdata = process(teamdata)
-# teamdata2 = process(teamdata2)
-# teamdata3 = process(teamdata3)
-# 
-# teamdata$MINSECLEFT <- ms(teamdata$PCTIMESTRING) + minutes((4 - teamdata$PERIOD) * 12)
-# teamdata$SECINTOGAME <- 2880 - period_to_seconds(teamdata$MINSECLEFT)
-# teamdata$min2r <- ceiling(teamdata$SECINTOGAME / 120)
-# 
-# teamdata2$MINSECLEFT <- ms(teamdata2$PCTIMESTRING) + minutes((4 - teamdata2$PERIOD) * 12)
-# teamdata2$SECINTOGAME <- 2880 - period_to_seconds(teamdata2$MINSECLEFT)
-# teamdata2$min2r <- ceiling(teamdata2$SECINTOGAME / 120)
-# 
-# teamdata3$MINSECLEFT <- ms(teamdata3$PCTIMESTRING) + minutes((4 - teamdata3$PERIOD) * 12)
-# teamdata3$SECINTOGAME <- 2880 - period_to_seconds(teamdata3$MINSECLEFT)
-# teamdata3$min2r <- ceiling(teamdata3$SECINTOGAME / 120)
-# 
-# saveRDS(teamdata, "teamdata.RDS")
-# saveRDS(teamdata2, "teamdata2.RDS")
-# saveRDS(teamdata3, "teamdata3.RDS")
+
 teamdata=readRDS("clippers.RDS")
 teamdata2=readRDS("rockets.RDS")
 teamdata3=readRDS("pistons.RDS")
@@ -38,21 +19,6 @@ PHACKRAW=TWOMINS3
 CHACK=filter(CHACKRAW, NUMFT>0)
 HHACK=filter(HHACKRAW, NUMFT>0)
 PHACK=filter(PHACKRAW, NUMFT>0)
-#Cdf_gameh
-
-# Cdf_gameh$HACK = FALSE
-# 
-# CHACK$GAME_ID = as.character(CHACK$GAME_ID)
-# Cdf_gameh$GAME_ID = as.character(Cdf_gameh$GAME_ID)
-# 
-# test_df = left_join(Cdf_gameh,CHACK,by = c("GAME_ID"= "GAME_ID","min2r" = "GROUP"))
-
-# for(i in 1:nrow(CHACKRAW)){
-#   for(j in 1:nrow(Cdf_gameh))
-#     if(as.character(CHACKRAW$GAME_ID[i]) == as.character(Cdf_gameh$GAME_ID[j]) & CHACKRAW$GROUP[i] == Cdf_gameh$min2r[j]){
-#       Cdf_gameh$HACK[j] = CHACKRAW$HACKINT[i]
-#     }
-# }
 
 maximin = function(hscore){
   return (max(hscore) - min(hscore))

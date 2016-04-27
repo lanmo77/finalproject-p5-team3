@@ -32,7 +32,7 @@ game1$SCORE = unlist(as.character(game1$SCORE))
 game1$SCOREMARGIN = unlist(as.character(game1$SCOREMARGIN))
 
 # Remove period 5 (overtime)
-game1 <- game1[!(game1$PERIOD == 5),]
+game1 <- game1[!(game1$PERIOD >= 5),]
 ## Add timestamps min:sec left AND sec into game
 game1$MINSECLEFT <- ms(game1$PCTIMESTRING) + minutes((4 - game1$PERIOD) * 12)
 game1$SECINTOGAME <- 2880 - period_to_seconds(game1$MINSECLEFT)
@@ -129,7 +129,7 @@ game2$SCORE = unlist(as.character(game2$SCORE))
 game2$SCOREMARGIN = unlist(as.character(game2$SCOREMARGIN))
 
 # Remove period 5 (overtime)
-game2 <- game2[!(game2$PERIOD == 5),]
+game2 <- game2[!(game2$PERIOD >= 5),]
 ## Add timestamps min:sec left AND sec into game
 game2$MINSECLEFT <- ms(game2$PCTIMESTRING) + minutes((4 - game2$PERIOD) * 12)
 game2$SECINTOGAME <- 2880 - period_to_seconds(game2$MINSECLEFT)
@@ -226,7 +226,7 @@ game3$SCORE = unlist(as.character(game3$SCORE))
 game3$SCOREMARGIN = unlist(as.character(game3$SCOREMARGIN))
 
 # Remove period 5 (overtime)
-game3 <- game3[!(game3$PERIOD == 5),]
+game3 <- game3[!(game3$PERIOD >= 5),]
 ## Add timestamps min:sec left AND sec into game
 game3$MINSECLEFT <- ms(game3$PCTIMESTRING) + minutes((4 - game3$PERIOD) * 12)
 game3$SECINTOGAME <- 2880 - period_to_seconds(game3$MINSECLEFT)
