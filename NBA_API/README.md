@@ -18,8 +18,8 @@ playbyplay(gameID.list)
 Return the play by play data within each game. 
 ### Example: 
 playbyplay_data=playbyplay(gameID.list=sample.list)
-
-*note: gameID should be character and do not miss out the '00' in the beginning*
+    
+**note: gameID should be character and do not miss out the '00' in the beginning**
 
 ## Player Stats
 ### Function:
@@ -28,8 +28,8 @@ playerstats(season, seasontype)
 return to the overall stats for each player in the specified season and season type
 ### Example:
 PlayerStats_data=playerstats(season='2014-15',seasontype='Regular+Season')
-  
-*note: season should follow the format given in the example, season type can be chosen from 'Regular+Season' or 'Playoffs'*
+    
+**note: season should follow the format given in the example, season type can be chosen from 'Regular+Season' or 'Playoffs'**
 
 ## Team Stats
 ### Function:
@@ -39,7 +39,7 @@ return to the overall stats for each team in the given season and season type
 ### Example:
 TeamStats_data=teamstats(season='2014-15',seasontype='Regular+Season')
   
-*note: season should follow the format given in the example, season type can be chosen from 'Regular+Season' or 'Playoffs'*
+**note: season should follow the format given in the example, season type can be chosen from 'Regular+Season' or 'Playoffs'**
 
 ## Data for Each Team
 ### Function:
@@ -49,7 +49,7 @@ Return to the summary stats for each game the given team played in the specified
 ### Example:
 TeamData_data=teamdata(teamID='1610612765',seasontype = 'Regular+Season',season='2014-15')
   
-*note: season should follow the format given in the example, season type can be chosen from 'Regular+Season' or 'Playoffs', TeamID should be character*
+**note: season should follow the format given in the example, season type can be chosen from 'Regular+Season' or 'Playoffs', TeamID should be character**
 
 ## Game Stats
 ### Function:
@@ -69,7 +69,7 @@ Return to the visiting team ID and home team ID of each given game
 ### Example:
 visitinghome_data=visitinghome(gameID.list=sample.list)
   
-*note: gameID should be character and do not miss out the '00' in the beginning*
+**note: gameID should be character and do not miss out the '00' in the beginning**
 
 
 ## Shot Data for each player
@@ -80,7 +80,7 @@ Return to the detailed information about each shot the given player made includi
 ### Example:
 shotdata_data=shotdata(playerID=201939, season='2014-15',seasontype='Regular+Season')
   
-*note: season should follow the format given in the example, season type can be chosen from 'Regular+Season' or 'Playoffs', PlayerID should be character*
+**note: season should follow the format given in the example, season type can be chosen from 'Regular+Season' or 'Playoffs', PlayerID should be character**
 
 
 
